@@ -14,6 +14,9 @@ export function getCharacterImage(name, size = "m") {
       .href
   })`;
 }
+export function getCardDecor(decor) {
+  return `url(${new URL(`../assets/svg/${decor}.svg`, import.meta.url).href})`;
+}
 export function createPlayers(num = 2) {
   if (num < 2 || num > 8) {
     console.error("玩家数必须为2-8位");

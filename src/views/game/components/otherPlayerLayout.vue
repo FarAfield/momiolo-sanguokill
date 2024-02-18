@@ -13,8 +13,8 @@
         :key="index"
         :player="player"
       ></OtherPlayer>
+      <GamePile></GamePile>
     </div>
-
     <div class="right">
       <OtherPlayer
         v-for="(player, index) in rightPlayerList"
@@ -28,6 +28,7 @@
 <script setup>
 import { computed } from "vue";
 import OtherPlayer from "./otherPlayer.vue";
+import GamePile from "./gamePile.vue";
 const props = defineProps({
   playerList: {
     type: Array,
@@ -92,7 +93,9 @@ const leftPlayerList = computed(() => {
   .center {
     flex: 1;
     display: flex;
+    flex-direction: column;
     justify-content: center;
+    align-items: center;
   }
   .right {
     display: flex;

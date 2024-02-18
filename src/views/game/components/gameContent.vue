@@ -13,7 +13,7 @@ const player = {
   name: "神郭嘉",
   sex: "male",
   //   group: [Group.SHEN],
-  // avatar: getCharacterImage("shenguojia", "l"),
+  avatar: getCharacterImage("shenguojia", "l"),
   maxHp: 3,
   hp: 3,
   seatNum: 0,
@@ -22,7 +22,7 @@ const player = {
 const playerList = new Array(7).fill().map(() => {
   return {
     ...player,
-    // avatar: getCharacterImage("shenguojia", "m"),
+    avatar: getCharacterImage("shenguojia", "m"),
   };
 });
 </script>
