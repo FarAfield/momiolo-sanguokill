@@ -1,4 +1,4 @@
-export default class Player {
+class Player {
   name = undefined; // 武将名称
   sex = undefined; // 武将性别
   group = []; // 武将势力
@@ -13,8 +13,14 @@ export default class Player {
   actionHistory = []; // 操作记录
   marks = new Map(); // 标记
   ai = {}; // ai逻辑
-  // constructor() {
 
-  // }
-  build() {}
+  constructor(player) {
+    Object.keys(player).forEach((key) => {
+      this[key] = player[key];
+    });
+  }
+
+  static $createPlayer() {}
 }
+
+export default Player;
