@@ -3,11 +3,11 @@ class Player {
   // baseInfo
   playerType = undefined; // 例如  shenguojia/guojia
   playerName = undefined; // 名称  神郭嘉/郭嘉
-  playSex = undefined; // 性别
-  playGroup = []; // 势力(双将时可认定为多势力)
-  playAvatar = undefined; // 头像
-  playMaxHp = 0; // 最大体力上限
-  playHp = 0; // 当前体力
+  playerSex = undefined; // 性别
+  playerGroup = []; // 势力(双将时可认定为多势力)
+  playerAvatar = undefined; // 头像
+  playerMaxHp = 0; // 最大体力上限
+  playerHp = 0; // 当前体力
 
   // actionInfo
   skills = []; // 技能
@@ -33,11 +33,11 @@ class Player {
         const character = {
           playerType: type,
           playerName: name,
-          playSex: sex,
-          playGroup: [group],
-          playAvatar: getCharacterImage(type, "l"),
-          playMaxHp: maxHp,
-          playHp: maxHp,
+          playerSex: sex,
+          playerGroup: [group],
+          playerAvatar: getCharacterImage(type),
+          playerMaxHp: maxHp,
+          playerHp: maxHp,
           skills,
         };
         characters.push(character);

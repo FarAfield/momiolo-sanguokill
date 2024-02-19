@@ -4,7 +4,15 @@
   </div>
 </template>
 <script setup>
+import { onMounted } from "vue";
 import GameLayout from "./components/gameLayout.vue";
+import { useGameStore } from "@/store";
+
+const gameStore = useGameStore();
+
+onMounted(async () => {
+  await gameStore.init();
+});
 
 // 画面比例  1136 * 640
 

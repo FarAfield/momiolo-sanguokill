@@ -8,14 +8,13 @@ export function getCommonImage(name) {
     new URL(`../assets/images/common/${name}.png`, import.meta.url).href
   })`;
 }
-export function getCharacterImage(name, size = "m") {
+export function getCharacterImage(name) {
   return `url(${
-    new URL(`../assets/images/character/${name}_${size}.png`, import.meta.url)
-      .href
+    new URL(`../assets/images/character/${name}.png`, import.meta.url).href
   })`;
 }
-export function getCardDecor(decor) {
-  return `url(${new URL(`../assets/svg/${decor}.svg`, import.meta.url).href})`;
+export function getSvgImage(name) {
+  return `url(${new URL(`../assets/svg/${name}.svg`, import.meta.url).href})`;
 }
 export function createPlayers(num = 2) {
   if (num < 2 || num > 8) {

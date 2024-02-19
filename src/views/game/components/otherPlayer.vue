@@ -19,7 +19,7 @@ const props = defineProps({
   .avatar {
     width: 100%;
     height: 100%;
-    background-image: v-bind("props.player.avatar");
+    background-image: v-bind("props.player.playerAvatar");
     background-repeat: no-repeat;
     background-size: cover;
   }

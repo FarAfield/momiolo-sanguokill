@@ -5,26 +5,27 @@
   </div>
 </template>
 <script setup>
-import { getCharacterImage } from "@/utils";
+import { watch, computed, ref } from "vue";
+import { useGameStore } from "@/store";
 import SelfPlayer from "./selfPlayer.vue";
 import OtherPlayerLayout from "./otherPlayerLayout.vue";
+import { cloneDeep } from "lodash-es";
 
-const player = {
-  name: "神郭嘉",
-  sex: "male",
-  //   group: [Group.SHEN],
-  avatar: getCharacterImage("shenguojia", "l"),
-  maxHp: 3,
-  hp: 3,
-  seatNum: 0,
-};
+const gameStore = useGameStore();
+const allPlayerList = ref([]);
 
-const playerList = new Array(7).fill().map(() => {
-  return {
-    ...player,
-    avatar: getCharacterImage("shenguojia", "m"),
-  };
-});
+const player = computed(() => allPlayerList.value[0] || {});
+const playerList = computed(() => allPlayerList.value.slice(1));
+
+watch(
+  () => gameStore.playerList,
+  (newVal) => {
+    allPlayerList.value = cloneDeep(newVal).slice(24);
+  },
+  {
+    deep: true,
+  }
+);
 </script>
 <style lang="scss" scoped>
 .gameContent {

@@ -86,10 +86,10 @@ function generateBasicCard() {
       [Decor.Club]: 4,
     }),
   };
-  // 【酒】共有5张，黑桃2张、梅花2张、方块1张    todo
+  // 【酒】共有5张，黑桃2张、梅花2张、方块1张
   result["jiu"] = {
     name: "酒",
-    des: "",
+    des: "1、出牌阶段对自己使用，令本回合下一张【杀】所造成的伤害+1（一回合只能使用一次）。2、当你处于濒死状态时，对自己使用，立即回复1点体力。",
     list: generateList({
       [Decor.Spade]: 2,
       [Decor.Club]: 2,
@@ -148,10 +148,10 @@ function generateBasicCard() {
       [Decor.Heart]: 1,
     }),
   };
-  // 【兵粮寸断】共2张，黑桃1张、梅花1张  todo
+  // 【兵粮寸断】共2张，黑桃1张、梅花1张
   result["bingliangcunduan"] = {
     name: "兵粮寸断",
-    des: "",
+    des: "出牌阶段，对一名距离为1的其他角色使用。若判定结果不为梅花，跳过其摸牌阶段。",
     list: generateList({
       [Decor.Spade]: 1,
       [Decor.Club]: 1,
@@ -192,10 +192,10 @@ function generateBasicCard() {
       [Decor.Club]: 2,
     }),
   };
-  // 【铁索连环】共有6张，黑桃2张、梅花4张   todo
+  // 【铁索连环】共有6张，黑桃2张、梅花4张
   result["tiesuolianhuan"] = {
     name: "铁索连环",
-    des: "",
+    des: "1、选择一至两名目标角色，横置他们的武将牌；若目标角色已横置，则重置他们。被横置的角色处于“连环状态”。2、重铸：出牌阶段，你可以从手里弃掉这张牌，然后摸一张牌。",
     list: generateList({
       [Decor.Spade]: 2,
       [Decor.Club]: 4,
@@ -222,10 +222,10 @@ function generateBasicCard() {
       [Decor.Diamond]: 1,
     }),
   };
-  // 【火攻】共有3张，红桃2张、方块1张   todo
+  // 【火攻】共有3张，红桃2张、方块1张
   result["huogong"] = {
     name: "火攻",
-    des: "",
+    des: "出牌阶段，对任一有手牌的角色使用。目标角色展示一张手牌，然后你若弃掉一张与展示牌相同花色的手牌，则【火攻】对该角色造成1点火焰伤害。",
     list: generateList({
       [Decor.Heart]: 2,
       [Decor.Diamond]: 1,
@@ -291,19 +291,19 @@ function generateBasicCard() {
       [Decor.Club]: 1,
     }),
   };
-  // 【藤甲】2张（黑桃、梅花）   todo
+  // 【藤甲】2张（黑桃、梅花）
   result["tengjia"] = {
     name: "藤甲",
-    des: "",
+    des: "锁定技，【南蛮入侵】、【万箭齐发】和普通【杀】对你无效。你每次受到火焰伤害时，该伤害+1。",
     list: generateList({
       [Decor.Spade]: 1,
       [Decor.Club]: 1,
     }),
   };
-  // 【白银狮子】梅花   todo
+  // 【白银狮子】梅花
   result["baiyinshizi"] = {
     name: "白银狮子",
-    des: "",
+    des: "锁定技，你每次受到伤害时，最多承受1点伤害（防止多余的伤害）；当你失去装备区里的【白银狮子】时，你回复1点体力。",
     list: generateList({
       [Decor.Club]: 1,
     }),
@@ -345,10 +345,9 @@ function generateBasicCard() {
       [Decor.Spade]: 1,
     }),
   };
-  // todo
   result["gudingdao"] = {
     name: "古锭刀",
-    des: "",
+    des: "锁定技，当你使用【杀】造成伤害时，若指定的目标没有手牌，该伤害+1。",
     list: generateList({
       [Decor.Spade]: 1,
     }),
@@ -392,10 +391,9 @@ function generateBasicCard() {
       [Decor.Diamond]: 1,
     }),
   };
-  // todo
   result["zhuqueyushan"] = {
     name: "朱雀羽扇",
-    des: "",
+    des: "你可以将你的任一普通【杀】当具火焰伤害的【杀】来使用。",
     list: generateList({
       [Decor.Diamond]: 1,
     }),
@@ -466,7 +464,9 @@ function generateBasicCharacter() {
 function gameInit() {
   // todo 洗牌  角色指定
   const cardList = Card.$createCard("basic", generateBasicCard());
-  const playerList = Player.$createCharacter(generateBasicCharacter());
+  const playerList = Player.$createCharacter(generateBasicCharacter()).map(
+    (i) => new Player(i)
+  );
   return { cardList, playerList };
 }
 

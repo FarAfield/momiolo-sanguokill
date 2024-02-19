@@ -9,7 +9,7 @@
   </div>
 </template>
 <script setup>
-import { onMounted, computed, ref } from "vue";
+import { watch, computed, ref } from "vue";
 import { useGameStore } from "@/store";
 import { cloneDeep } from "lodash-es";
 import BaseCard from "@/components/baseCard/index.vue";
@@ -20,10 +20,15 @@ const totalCardList = ref([]); // 牌堆
 const disCardList = ref([]); // 弃牌堆
 const lastDisCard = computed(() => disCardList.value.at(-1) || {});
 
-onMounted(async () => {
-  await gameStore.init();
-  totalCardList.value = cloneDeep(gameStore.cardList);
-});
+watch(
+  () => gameStore.cardList,
+  (newVal) => {
+    totalCardList.value = cloneDeep(newVal);
+  },
+  {
+    deep: true,
+  }
+);
 function handleSwitch() {
   // 弃牌堆+1 总牌堆-1
   disCardList.value.push(totalCardList.value.at(-1));

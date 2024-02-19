@@ -11,7 +11,7 @@
 </template>
 <script setup>
 import { computed } from "vue";
-import { getCardDecor } from "@/utils";
+import { getSvgImage } from "@/utils";
 
 const props = defineProps({
   isBack: {
@@ -24,7 +24,7 @@ const props = defineProps({
   },
 });
 const cardDecor = computed(() =>
-  props.isBack ? undefined : getCardDecor(props.card.cardDecor)
+  props.isBack ? undefined : getSvgImage(props.card.cardDecor)
 );
 </script>
 <style lang="scss" scoped>

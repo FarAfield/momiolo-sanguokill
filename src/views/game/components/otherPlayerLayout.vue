@@ -17,7 +17,7 @@
     </div>
     <div class="right">
       <OtherPlayer
-        v-for="(player, index) in rightPlayerList"
+        v-for="(player, index) in rightPlayerList.reverse()"
         :key="index"
         :player="player"
       ></OtherPlayer>
