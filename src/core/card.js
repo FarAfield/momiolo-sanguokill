@@ -18,7 +18,7 @@ class Card {
   // 创建卡牌
   static $createCard(group, config) {
     const cards = [];
-    Object.entries(config).forEach(([type, { name, skin, des, list }]) => {
+    Object.entries(config).forEach(([type, { name, des, list }]) => {
       (list || []).forEach(({ num, decor }) => {
         const card = {
           group,
@@ -26,7 +26,7 @@ class Card {
           cardName: name,
           cardNum: Num[num - 1],
           cardDecor: Decor[decor - 1],
-          cardSkin: skin,
+          cardSkin: "",
           cardDes: des,
         };
         cards.push(card);
