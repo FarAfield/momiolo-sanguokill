@@ -26,6 +26,7 @@ const useGameStore = defineStore({
   actions: {
     // 开始游戏，确定游戏模式、游戏卡包、游戏人数
     startGame(mode, cardPackage, playerNum) {
+      this.$reset();
       this.mode = mode;
       this.cardPackage = cardPackage;
       this.playerNum = playerNum;
