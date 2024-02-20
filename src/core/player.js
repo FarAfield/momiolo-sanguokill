@@ -1,11 +1,13 @@
 import { getCharacterImage } from "@/utils";
+const Identity = ["monarch", "minister", "rebel", "spy"]; // 主 忠  反  内
 class Player {
-  // baseInfo
-  playerType = undefined; // 例如  shenguojia/guojia
+  characterGroup = []; // 例如  [shenguojia,guojia]
   playerName = undefined; // 名称  神郭嘉/郭嘉
   playerSex = undefined; // 性别
-  playerGroup = []; // 势力(双将时可认定为多势力)
-  playerAvatar = undefined; // 头像
+  playerIdentity = undefined; // 身份
+  playerSeatNum = 0; // 位次（主公永远为0）
+  playerGroup = undefined; // 势力
+  playerAvatar = []; // 头像(双将时多头像)
   playerMaxHp = 0; // 最大体力上限
   playerHp = 0; // 当前体力
 
@@ -16,7 +18,6 @@ class Player {
   marks = new Map(); // 标记
   ai = {}; // ai逻辑
 
-  playSeatNum = 0; // 位次（主公永远为0）
   phaseNumber = 0; // 阶段数
 
   constructor(player) {
@@ -25,17 +26,38 @@ class Player {
     });
   }
 
-  // 生成人物
-  static $createCharacter(config) {
+  // 生成玩家
+  static $createPlayer(playerListConfig, allCharacterList) {
+    const config = playerListConfig.map((item) => {
+      const characterList = allCharacterList.filter((i) =>
+        item.characterGroup.includes(i.characterType)
+      );
+      const firstCharacter = characterList[0];
+      const player = {
+        characterGroup: item.characterGroup,
+        playerName: characterList.map((i) => i.characterName).join(","),
+        playerSex: firstCharacter.characterSex,
+        playerIdentity: item.identity,
+        playerGroup: firstCharacter.characterGroup,
+        playerAvatar: characterList.map((i) => i.characterAvatar),
+        playerMaxHp: firstCharacter.characterMaxHp,
+        playerHp: firstCharacter.characterMaxHp,
+        skills: [],
+        playerSeatNum: item.seatNum,
+      };
+      return player;
+    });
+
     const characters = [];
     Object.entries(config).forEach(
-      ([type, { name, sex, group, maxHp, skills }]) => {
+      ([type, { name, sex, group: _group, maxHp, skills }]) => {
         const character = {
+          group,
           playerType: type,
           playerName: name,
           playerSex: sex,
-          playerGroup: [group],
-          playerAvatar: getCharacterImage(type),
+          playerGroup: [_group],
+          playerAvatar: [getCharacterImage(type)],
           playerMaxHp: maxHp,
           playerHp: maxHp,
           skills,
@@ -45,9 +67,6 @@ class Player {
     );
     return characters;
   }
-
-  // 由生成的人物生成玩家(多将融合、自身位更新头像)
-  static $createPlayer(config) {}
 }
 
 export default Player;

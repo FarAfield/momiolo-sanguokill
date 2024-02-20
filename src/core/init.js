@@ -1,24 +1,9 @@
 import Card from "@/core/card";
+import Character from "@/core/character";
 import Player from "@/core/player";
+import { getRandomNumber, getCharacterImage } from "@/utils";
+import { Decor, Group } from "@/utils/enum";
 
-const Decor = {
-  Spade: 1,
-  Heart: 2,
-  Club: 3,
-  Diamond: 4,
-};
-const Group = {
-  WEI: "魏",
-  SHU: "蜀",
-  WU: "吴",
-  QUN: "群",
-  SHEN: "神",
-  MO: "魔",
-  XIAN: "仙",
-};
-function getRandomNumber(min, max) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
 function getCardNum() {
   return getRandomNumber(1, 13);
 }
@@ -461,13 +446,51 @@ function generateBasicCharacter() {
   return result;
 }
 
-function gameInit() {
-  // todo 洗牌  角色指定
-  const cardList = Card.$createCard("basic", generateBasicCard());
-  const playerList = Player.$createCharacter(generateBasicCharacter()).map(
-    (i) => new Player(i)
+// 生成默认玩家
+function buildDefaultPlayer(playerNum) {
+  return new Array(playerNum)
+    .fill()
+    .map((_, i) => new Player({ playerType: String(i) }));
+}
+// 生成卡牌
+function buildCardList(cardPackage) {
+  const basicCardList = Card.$createCard("basic", generateBasicCard());
+  return basicCardList.sort(() => Math.random() - 0.5);
+}
+// 生成武将
+function buildCharacterList(mode, cardPackage) {
+  const basicCharacterList = Character.$createCharacter(
+    "basic",
+    generateBasicCharacter()
   );
-  return { cardList, playerList };
+  return basicCharacterList.sort(() => Math.random() - 0.5);
+}
+// 生成真实玩家
+function buildPlayerList(playerListConfig, allCharacterList) {
+  const config = playerListConfig.map((item) => {
+    const characterList = allCharacterList.filter((i) =>
+      item.characterGroup.includes(i.playerType)
+    );
+    const player = {
+      playerType: characterList.map((i) => i.playerType),
+      playerName: characterList.map((i) => i.playerName),
+      playerSex: characterList[0].playerSex,
+      playerIdentity: item.playerIdentity,
+      playerGroup: characterList.map((i) => i.playerGroup),
+      playerAvatar: characterList.map((i) => getCharacterImage(i.playerType)),
+      playerMaxHp: characterList[0].playerMaxHp,
+      playerHp: characterList[0].playerMaxHp,
+      skills: [],
+      playerSeatNum: item.seatNum,
+    };
+    return player;
+  });
+  return config;
 }
 
-export { gameInit };
+export {
+  buildDefaultPlayer,
+  buildCharacterList,
+  buildCardList,
+  buildPlayerList,
+};

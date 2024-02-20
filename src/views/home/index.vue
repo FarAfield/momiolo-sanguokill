@@ -1,14 +1,42 @@
 <template>
-  <div>测试</div>
+  <div>
+    <a-space>
+      <a-button type="primary" @click="handleStart">游戏开始</a-button>
+      <a-button type="primary" @click="handleSelect">选择身份和武将</a-button>
+    </a-space>
+  </div>
 </template>
 <script setup>
-import { onMounted } from "vue";
+import { onMounted, watch } from "vue";
 import { useGameStore } from "@/store";
 
 const gameStore = useGameStore();
-onMounted(async () => {
-  await gameStore.init();
-  console.log(gameStore.playerList, gameStore.cardList);
-});
+
+function handleStart() {
+  gameStore.startGame("basic", ["basic"], 8);
+}
+
+function handleSelect() {
+  gameStore.initGame(1, ["shenguojia"]);
+}
+
+watch(
+  () => gameStore.playerList,
+  (newVal) => {
+    console.log("游戏角色", newVal);
+  },
+  {
+    deep: true,
+  }
+);
+watch(
+  () => gameStore.cardList,
+  (newVal) => {
+    console.log("游戏卡牌", newVal);
+  },
+  {
+    deep: true,
+  }
+);
 </script>
 <style lang="scss" scoped></style>

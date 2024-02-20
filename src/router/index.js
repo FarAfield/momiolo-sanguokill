@@ -3,7 +3,7 @@ import { createRouter, createWebHashHistory } from "vue-router";
 const appRoutes = [
   {
     path: "/",
-    redirect: "game",
+    redirect: "home",
   },
   {
     path: "/home",
