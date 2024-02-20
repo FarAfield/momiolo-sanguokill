@@ -22,12 +22,14 @@
 </template>
 
 <script setup>
-const props = defineProps({
-  player: {
-    type: Object,
-    default: () => {},
-  },
-});
+import { computed } from "vue";
+import { useGameStore } from "@/store";
+
+const gameStore = useGameStore();
+
+const player = computed(() =>
+  gameStore.playerList.find((_, index) => index === gameStore.controlIndex)
+);
 </script>
 
 <style lang="scss" scoped>
@@ -38,7 +40,7 @@ const props = defineProps({
   .avatar {
     width: 160px;
     height: 190px;
-    background-image: v-bind("props.player.playerAvatar");
+    background-image: v-bind("player.playerAvatar[0]");
     background-repeat: no-repeat;
     background-size: cover;
   }

@@ -38,5 +38,14 @@ watch(
     deep: true,
   }
 );
+watch(
+  () => gameStore.characterList,
+  (newVal) => {
+    console.log("角色卡牌", newVal);
+  },
+  {
+    deep: true,
+  }
+);
 </script>
 <style lang="scss" scoped></style>

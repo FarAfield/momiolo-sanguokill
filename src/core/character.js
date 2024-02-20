@@ -1,5 +1,4 @@
 import { getCharacterImage } from "@/utils";
-// character
 class Character {
   group; // 分组   例如: basic  extra
   characterType; // 例如  shenguojia

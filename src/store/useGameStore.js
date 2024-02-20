@@ -40,7 +40,7 @@ const useGameStore = defineStore({
     // 玩家选择身份、武将。游戏开始
     initGame(selectedIdentity, selectedCharacter = []) {
       if (selectedCharacter.length !== (this.isDouble ? 2 : 1)) {
-        console.error("initGame---传参错误");
+        console.error("initGame---参数错误");
         return;
       }
       // 判断游戏模式
@@ -57,7 +57,7 @@ const useGameStore = defineStore({
         // 获取排除已选武将的随机武将
         const gameCharacter = getNoRepeatNum(
           this.characterList
-            .map((i) => i.playerType)
+            .map((i) => i.characterType)
             .filter((i) => !selectedCharacter.includes(i)),
           (this.playerNum - 1) * (this.isDouble ? 2 : 1)
         );
@@ -80,6 +80,8 @@ const useGameStore = defineStore({
         });
         this.playerList = buildPlayerList(playerListConfig, this.characterList);
       }
+      // 游戏开始
+      this.status = "begin";
     },
   },
 });

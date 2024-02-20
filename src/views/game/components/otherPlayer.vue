@@ -4,12 +4,14 @@
   </div>
 </template>
 <script setup>
+import { computed } from "vue";
 const props = defineProps({
   player: {
     type: Object,
     default: () => {},
   },
 });
+const playerAvatar = computed(() => props.player.playerAvatar);
 </script>
 
 <style lang="scss" scoped>
@@ -19,7 +21,7 @@ const props = defineProps({
   .avatar {
     width: 100%;
     height: 100%;
-    background-image: v-bind("props.player.playerAvatar");
+    background-image: v-bind("playerAvatar[0]");
     background-repeat: no-repeat;
     background-size: cover;
   }

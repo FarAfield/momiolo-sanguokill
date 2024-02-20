@@ -1,7 +1,7 @@
 import Card from "@/core/card";
 import Character from "@/core/character";
 import Player from "@/core/player";
-import { getRandomNumber, getCharacterImage } from "@/utils";
+import { getRandomNumber } from "@/utils";
 import { Decor, Group } from "@/utils/enum";
 
 function getCardNum() {
@@ -467,25 +467,7 @@ function buildCharacterList(mode, cardPackage) {
 }
 // 生成真实玩家
 function buildPlayerList(playerListConfig, allCharacterList) {
-  const config = playerListConfig.map((item) => {
-    const characterList = allCharacterList.filter((i) =>
-      item.characterGroup.includes(i.playerType)
-    );
-    const player = {
-      playerType: characterList.map((i) => i.playerType),
-      playerName: characterList.map((i) => i.playerName),
-      playerSex: characterList[0].playerSex,
-      playerIdentity: item.playerIdentity,
-      playerGroup: characterList.map((i) => i.playerGroup),
-      playerAvatar: characterList.map((i) => getCharacterImage(i.playerType)),
-      playerMaxHp: characterList[0].playerMaxHp,
-      playerHp: characterList[0].playerMaxHp,
-      skills: [],
-      playerSeatNum: item.seatNum,
-    };
-    return player;
-  });
-  return config;
+  return Player.$createPlayer(playerListConfig, allCharacterList);
 }
 
 export {

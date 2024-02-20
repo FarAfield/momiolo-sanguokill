@@ -27,15 +27,15 @@
 
 <script setup>
 import { computed } from "vue";
+import { useGameStore } from "@/store";
 import OtherPlayer from "./otherPlayer.vue";
 import GamePile from "./gamePile.vue";
-const props = defineProps({
-  playerList: {
-    type: Array,
-    default: () => [],
-  },
-});
 
+const gameStore = useGameStore();
+const otherPlayerList = computed(() =>
+  gameStore.playerList.filter((_, index) => index !== gameStore.controlIndex)
+);
+const otherPlayerLength = computed(() => otherPlayerList.value.length);
 // 1 => center
 // 2 => left  right
 // 3 => left  center right
@@ -43,23 +43,22 @@ const props = defineProps({
 // 5 => left  center right
 // 6 => left  right
 // 7 => left  center right
-const otherPlayerLength = computed(() => props.playerList.length);
 const rightPlayerList = computed(() => {
   if ([2, 3].includes(otherPlayerLength.value)) {
-    return props.playerList.slice(0, 1);
+    return otherPlayerList.value.slice(0, 1);
   }
   if ([4, 5].includes(otherPlayerLength.value)) {
-    return props.playerList.slice(0, 2);
+    return otherPlayerList.value.slice(0, 2);
   }
   if ([6, 7].includes(otherPlayerLength.value)) {
-    return props.playerList.slice(0, 3);
+    return otherPlayerList.value.slice(0, 3);
   }
   return [];
 });
 const centerPlayerList = computed(() => {
   // 奇数时取 (length-1)/2 下标
   if (otherPlayerLength.value % 2 === 1) {
-    const player = props.playerList[(otherPlayerLength.value - 1) / 2];
+    const player = otherPlayerList.value[(otherPlayerLength.value - 1) / 2];
     return [player];
   }
   return [];
@@ -67,13 +66,13 @@ const centerPlayerList = computed(() => {
 
 const leftPlayerList = computed(() => {
   if ([2, 3].includes(otherPlayerLength.value)) {
-    return props.playerList.slice(-1);
+    return otherPlayerList.value.slice(-1);
   }
   if ([4, 5].includes(otherPlayerLength.value)) {
-    return props.playerList.slice(-2);
+    return otherPlayerList.value.slice(-2);
   }
   if ([6, 7].includes(otherPlayerLength.value)) {
-    return props.playerList.slice(-3);
+    return otherPlayerList.value.slice(-3);
   }
   return [];
 });

@@ -7,7 +7,7 @@
 <script setup>
 import { computed } from "vue";
 import { useGameStore } from "@/store";
-import { getBackgroundImage, getCommonImage } from "@/utils";
+import { getBackgroundImage } from "@/utils";
 import GameHeader from "./gameHeader.vue";
 import GameContent from "./gameContent.vue";
 
