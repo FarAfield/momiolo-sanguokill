@@ -3,12 +3,16 @@
     <a-space>
       <a-button type="primary" @click="handleStart">游戏开始</a-button>
       <a-button type="primary" @click="handleSelect">选择身份和武将</a-button>
+      <a-button type="primary" @click="handleEngineStart"
+        >开启事件循环</a-button
+      >
     </a-space>
   </div>
 </template>
 <script setup>
 import { onMounted, watch } from "vue";
 import { useGameStore } from "@/store";
+import { initEventEngine } from "@/core/engine";
 
 const gameStore = useGameStore();
 
@@ -19,7 +23,9 @@ function handleStart() {
 function handleSelect() {
   gameStore.initGame(1, ["shenguojia"]);
 }
-
+function handleEngineStart() {
+  initEventEngine();
+}
 watch(
   () => gameStore.playerList,
   (newVal) => {
