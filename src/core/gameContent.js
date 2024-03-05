@@ -27,21 +27,24 @@ const phasedDisCardEvent = createOpportunityEvent("phasedDisCard");
 
 const GameContent = {
   game: function ({ event }) {
-    event.hasNext = true;
-    event.next = globalEvent;
+    globalEvent.forEach((i) => {
+      event.trigger(i);
+    });
   },
   globalGameStart: function ({ event }) {
     event.finish();
   },
   globalGameDraw: function ({ event }) {
-    event.hasNext = true;
-    event.next = globalGameDrawEvent;
+    globalGameDrawEvent.forEach((i) => {
+      event.trigger(i);
+    });
   },
   globalRound: function ({ event }) {
     event.finish();
   },
   globalGameEnd: function ({ event }) {
-    event.finish();
+    // event.finish();
+    event.trigger("pause");
   },
   globalGameDrawBefore: function ({ event }) {
     event.finish();
@@ -53,8 +56,7 @@ const GameContent = {
     event.finish();
   },
   globalGameDrawAfter: function ({ event }) {
-    // event.finish();
-    event.triggerAsync("extraDraw");
+    event.trigger("extraDraw");
   },
 };
 

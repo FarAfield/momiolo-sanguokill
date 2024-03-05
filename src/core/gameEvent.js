@@ -11,9 +11,8 @@ class GameEvent {
     this.reject = null;
     // event attrs
     this.parent = undefined;
-    this.hasNext = false;
     this.next = [];
-    this.async = false;
+    this.after = [];
     this.content = "";
     this.result = {};
     this.player = {};
@@ -35,6 +34,7 @@ class GameEvent {
     this.isFinish = true;
     this.result = result;
     this.resolve?.();
+    console.log(`执行${this.eventName}-------完成`);
     return this;
   }
   // 生成Promise
@@ -47,22 +47,12 @@ class GameEvent {
     this.content = content;
     return this;
   }
-  // 创建链式非异步获取数据事件
-  static trigger(name) {
-    const event = new GameEvent(name);
-    event.parent = EventManager.event;
-    EventManager.event = event.toPromise();
-    return EventManager.event;
-  }
-  // 创建链式异步获取数据事件
-  triggerAsync(name) {
-    const event = new GameEvent(name);
-    event.parent = this;
-    event.async = true;
-    return event.toPromise();
-  }
-  forResult() {
-    return Promise.resolve(this.isFinish);
+  // 触发事件
+  trigger(name) {
+    const next = new GameEvent(name);
+    this.next.push(next);
+    this.result[name] = false;
+    return this;
   }
 }
 
