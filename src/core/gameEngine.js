@@ -72,7 +72,8 @@ async function loop() {
         EventManager.event = after;
       } else {
         // 结果给到父事件
-        event.parent.result[event.eventName] = true;
+        event.parent.result[`${event.eventId}-status`] = "done";
+        event.parent.result[`${event.eventId}-result`] = event.currentResult;
         EventManager.event = event.parent;
       }
     } else {
@@ -88,21 +89,20 @@ async function loop() {
 }
 
 async function runContent(event) {
-  return new Promise((resolve) => {
-    setTimeout(async () => {
-      if (
-        Object.values(event.result).length &&
-        Object.values(event.result).every((i) => !!i)
-      ) {
-        event.finish();
-      } else {
-        console.log(`执行${event.eventName}-------开始`);
-        await Object.assign(GameContent, mockContent)[event.eventName]({
-          event,
-        });
-      }
-      resolve();
-    }, 1000);
+  return new Promise(async (resolve) => {
+    const done =
+      Object.entries(event.result).length &&
+      Object.entries(event.result)
+        .filter((i) => i[0].includes("status"))
+        .every((i) => i[1] === "done");
+    if (done) {
+      event.finish();
+    } else {
+      await Object.assign(GameContent, mockContent)[event.eventName]({
+        event,
+      });
+    }
+    resolve();
   });
 }
 

@@ -1,10 +1,12 @@
 import GameEventPromise from "@/core/gameEventPromise";
+import { createSeedRadom, eventLog } from "@/utils";
 
+const radom = createSeedRadom(1000); // 创建种子
 class GameEvent {
   #promise;
   constructor(name) {
     // base attrs
-    this.eventId = Math.random();
+    this.eventId = radom();
     this.eventName = name;
     this.isFinish = false;
     this.resolve = null;
@@ -14,7 +16,10 @@ class GameEvent {
     this.next = [];
     this.after = [];
     this.content = "";
-    this.result = {};
+    this.result = {}; // 父事件收集子事件执行结果  `${eventId}-status`   `${eventId}-result`
+    this.currentResult = {}; // 当前事件执行结果
+    this.step = 0; // 事件执行步骤
+    // other attrs
     this.player = {};
     this.source = {};
     this.target = {};
@@ -34,7 +39,7 @@ class GameEvent {
     this.isFinish = true;
     this.result = result;
     this.resolve?.();
-    console.log(`执行${this.eventName}-------完成`);
+    eventLog(`执行${this.eventName}完成`, this.eventId);
     return this;
   }
   // 生成Promise
@@ -47,11 +52,12 @@ class GameEvent {
     this.content = content;
     return this;
   }
-  // 触发事件
+  // 触发新事件
   trigger(name) {
     const next = new GameEvent(name);
     this.next.push(next);
-    this.result[name] = false;
+    this.result[`${next.eventId}-status`] = "undone";
+    eventLog(`触发${next.eventName}`, next.eventId);
     return this;
   }
 }

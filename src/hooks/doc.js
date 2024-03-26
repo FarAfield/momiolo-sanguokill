@@ -43,7 +43,7 @@ async function loop(executeEvent) {
         after.parent = event;
         globalEvent = after;
       } else {
-        // 把事件结果给到父事件，同时删除该事件
+        // 把事件结果给到父事件，同时删除该事件(此时父事件可能只执行到其中一步，这一步拿到结果)
         event.parent._result = event.result;
         globalEvent = event.parent;
       }

@@ -53,7 +53,7 @@ export function getNoRepeatNum(array, length) {
   return result;
 }
 
-function createSeedRadom(initSeed) {
+export function createSeedRadom(initSeed) {
   function seedRadom(seed) {
     seed = (seed * 9301 + 49297) % 233280;
     return seed / 233280;
@@ -72,4 +72,8 @@ export function getRadomBySeed(seed, count) {
     result = radom();
   }
   return result;
+}
+
+export function eventLog() {
+  console.log(...arguments);
 }
