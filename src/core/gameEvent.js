@@ -16,9 +16,9 @@ class GameEvent {
     this.next = [];
     this.after = [];
     this.content = "";
-    this.result = {}; // 父事件收集子事件执行结果  `${eventId}-status`   `${eventId}-result`
-    this.currentResult = {}; // 当前事件执行结果
-    this.step = 0; // 事件执行步骤
+    this.result = {}; // 当前事件执行结果
+    this.subResult = {}; // 子事件执行结果  `${eventId}-status`   `${eventId}-result`
+    this.step = 1; // 事件执行步骤
     // other attrs
     this.player = {};
     this.source = {};
@@ -34,12 +34,39 @@ class GameEvent {
   static initGameEvent() {
     return new GameEvent().toPromise();
   }
+
+  goto(step) {
+    this.step = step;
+    return this;
+  }
+  redo() {
+    this.step--;
+    return this;
+  }
+  setContent(content) {
+    this.content = content;
+    return this;
+  }
+  // todo
+  getParent(level, keyword) {}
+  insertNext(name) {
+    const next = new GameEvent(name);
+    this.next.push(next);
+    eventLog(`insertNext: 插入【${next.eventName}】`);
+    return this;
+  }
+  insertAfter(name) {
+    const after = new GameEvent(name);
+    this.after.push(after);
+    eventLog(`insertAfter: 插入【${after.eventName}】`);
+    return this;
+  }
   // 事件结束
   finish(result) {
     this.isFinish = true;
     this.result = result;
     this.resolve?.();
-    eventLog(`执行${this.eventName}完成`, this.eventId);
+    eventLog(`执行【${this.eventName}】完成`);
     return this;
   }
   // 生成Promise
@@ -47,17 +74,12 @@ class GameEvent {
     !this.#promise && (this.#promise = new GameEventPromise(this));
     return this.#promise;
   }
-  // 设置事件内容
-  setContent(content) {
-    this.content = content;
-    return this;
-  }
   // 触发新事件
   trigger(name) {
     const next = new GameEvent(name);
     this.next.push(next);
-    this.result[`${next.eventId}-status`] = "undone";
-    eventLog(`触发${next.eventName}`, next.eventId);
+    this.subResult[`${next.eventId}-status`] = "undone";
+    eventLog(`添加【${next.eventName}】`);
     return this;
   }
 }

@@ -1,6 +1,5 @@
-import { EventManager } from "@/core/gameEvent";
-
-function createOpportunityEvent(name) {
+// 添加事件时机
+function addEventInstant(name) {
   return ["Before", "Begin", "End", "After"].map((i) => `${name}${i}`);
 }
 const globalEvent = [
@@ -9,7 +8,7 @@ const globalEvent = [
   "globalRound",
   "globalGameEnd",
 ];
-const globalGameDrawEvent = createOpportunityEvent("globalGameDraw");
+const globalGameDrawEvent = addEventInstant("globalGameDraw");
 const globalRoundEvent = ["roundBegin", "phaseLoop", "roundEnd"];
 const phaseLoopEvent = [
   "phaseStart", // 开始
@@ -19,11 +18,11 @@ const phaseLoopEvent = [
   "phasedDisCard", // 弃牌
   "phaseChange", // 阶段变更
 ];
-const phaseStartEvent = createOpportunityEvent("phaseStart");
-const phaseJudgeEvent = createOpportunityEvent("phaseJudge");
-const phaseDrawCardEvent = createOpportunityEvent("phaseDrawCard");
-const phaseUseCardEvent = createOpportunityEvent("phaseUseCard");
-const phasedDisCardEvent = createOpportunityEvent("phasedDisCard");
+const phaseStartEvent = addEventInstant("phaseStart");
+const phaseJudgeEvent = addEventInstant("phaseJudge");
+const phaseDrawCardEvent = addEventInstant("phaseDrawCard");
+const phaseUseCardEvent = addEventInstant("phaseUseCard");
+const phasedDisCardEvent = addEventInstant("phasedDisCard");
 
 const GameContent = {
   game: function ({ event }) {
@@ -31,32 +30,45 @@ const GameContent = {
       event.trigger(i);
     });
   },
-  globalGameStart: function ({ event }) {
-    event.finish();
-  },
   globalGameDraw: function ({ event }) {
     globalGameDrawEvent.forEach((i) => {
       event.trigger(i);
     });
   },
   globalRound: function ({ event }) {
-    event.finish();
+    globalRoundEvent.forEach((i) => {
+      event.trigger(i);
+    });
   },
-  globalGameEnd: function ({ event }) {
-    // event.finish();
-    event.trigger("pause");
+  phaseLoop: function ({ event }) {
+    phaseLoopEvent.forEach((i) => {
+      event.trigger(i);
+    });
   },
-  globalGameDrawBefore: function ({ event }) {
-    event.finish();
+  phaseStart: function ({ event }) {
+    phaseStartEvent.forEach((i) => {
+      event.trigger(i);
+    });
   },
-  globalGameDrawBegin: function ({ event }) {
-    event.finish();
+  phaseJudge: function ({ event }) {
+    phaseJudgeEvent.forEach((i) => {
+      event.trigger(i);
+    });
   },
-  globalGameDrawEnd: function ({ event }) {
-    event.finish();
+  phaseDrawCard: function ({ event }) {
+    phaseDrawCardEvent.forEach((i) => {
+      event.trigger(i);
+    });
   },
-  globalGameDrawAfter: function ({ event }) {
-    event.trigger("extraDraw");
+  phaseUseCard: function ({ event }) {
+    phaseUseCardEvent.forEach((i) => {
+      event.trigger(i);
+    });
+  },
+  phasedDisCard: function ({ event }) {
+    phasedDisCardEvent.forEach((i) => {
+      event.trigger(i);
+    });
   },
 };
 

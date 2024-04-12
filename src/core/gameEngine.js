@@ -46,6 +46,9 @@ function logEventPromise(event) {
     if (e.result) {
       result.result = { ...e.result };
     }
+    if (e.subResult) {
+      result.subResult = { ...e.subResult };
+    }
     return result;
   }
   return logEvent(event);
@@ -54,13 +57,12 @@ function logEventPromise(event) {
 async function loop() {
   while (true) {
     const event = EventManager.event;
-    // console.log(logEventPromise(event), "loop");
-    // debugger;
     const { eventName, isFinish, next, after } = event;
-    // 游戏暂停
-    if (eventName === "pause") {
+    // 游戏结束
+    if (eventName === "globalGameOver") {
       break;
     }
+    // 事件存在next,优先执行next
     if (next.length) {
       const next = event.next.shift();
       next.parent = event;
@@ -72,8 +74,8 @@ async function loop() {
         EventManager.event = after;
       } else {
         // 结果给到父事件
-        event.parent.result[`${event.eventId}-status`] = "done";
-        event.parent.result[`${event.eventId}-result`] = event.currentResult;
+        event.parent.subResult[`${event.eventId}-status`] = "done";
+        event.parent.subResult[`${event.eventId}-result`] = event.result;
         EventManager.event = event.parent;
       }
     } else {
@@ -88,19 +90,38 @@ async function loop() {
   }
 }
 
+const delay = () => {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve();
+    }, 1000);
+  });
+};
+
 async function runContent(event) {
   return new Promise(async (resolve) => {
     const done =
-      Object.entries(event.result).length &&
-      Object.entries(event.result)
+      Object.entries(event.subResult).length &&
+      Object.entries(event.subResult)
         .filter((i) => i[0].includes("status"))
         .every((i) => i[1] === "done");
     if (done) {
       event.finish();
     } else {
-      await Object.assign(GameContent, mockContent)[event.eventName]({
-        event,
-      });
+      const content = Object.assign(GameContent, mockContent)[event.eventName];
+      await delay();
+      if (content) {
+        await content({ event });
+      } else {
+        // 收集被动技能的触发时机并触发技能
+        if (event.eventName === "phasedDisCardBefore") {
+          event.trigger("extraDraw");
+        } else if (event.eventName === "phaseChange") {
+          event.trigger("globalGameOver");
+        } else {
+          event.finish();
+        }
+      }
     }
     resolve();
   });
