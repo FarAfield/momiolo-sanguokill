@@ -100,5 +100,53 @@ function trigger() {
   this.next = ["xxx"];
   return this;
 }
+// 卡牌事件  摸牌  获得牌  失去牌  使用牌  使用牌指定目标  响应牌  装备牌
+// const cardEvent = [
+//   "drawCard",
+//   "gainCard",
+//   "loseCard",
+//   "useCard",
+//   "useCardTo",
+//   "response",
+//   "equip",
+// ]
+//   .map((i) => addOpportunity(i))
+//   .flat();
+// 体力事件  伤害  受到伤害  失去体力  回复体力 减少体力上限  增加体力上限
+// const hpEvent = [
+//   "sourceDamage",
+//   "damage",
+//   "loseHp",
+//   "recoverHp",
+//   "loseMaxHp",
+//   "gainMaxHp",
+// ]
+//   .map((i) => addOpportunity(i))
+//   .flat()
+//   .concat(...["hpChange", "maxHpChange"]); // 体力值、最大体力值变化
+// 状态事件  翻面 横置  濒死
+// const statusEvent = ["turnOver", "link", "dying"]
+//   .map((i) => addOpportunity(i))
+//   .flat()
+//   .concat(...["dieBefore", "Begin"]); // 死亡前/时
 
+// console.log(globalEvent, phaseEvent, cardEvent, hpEvent, statusEvent);
 // createEvent  =>   默认挂载到globalEvent的next里面
+
+// createEvent('game')   =>  event.trigger("gameStart")  =>  (game.gameDraw  =>   game.phaseLoop )
+// game.createEvent('gameDraw').setContent('gameDraw')
+// game.createEvent('phaseLoop').setContent('phaseLoop')
+
+const p = (fn) =>
+  new Promise((r) =>
+    setTimeout(() => {
+      fn();
+      r();
+    }, 1000)
+  );
+
+// 1.initGameEvent
+// 2.createEvent('game').setContent()
+// 3.   step4: game.chooseCharacter()   step5:event.trigger('gameStart')   step6:game.gameDraw  step7:game.phaseLoop
+// 4.  game.createEvent('chooseCharacter')   game.me.chooseButton(game.createEvent('chooseButton'))
+// 5. => game => gameDraw | phaseLoop  =>  phase

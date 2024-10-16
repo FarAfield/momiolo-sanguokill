@@ -7,14 +7,12 @@
 <script setup>
 import { onMounted } from "vue";
 import useAutoFit from "./hooks/useAutoFit";
+import { testUtils, testGameEvent } from "./core/zTest";
 
 const { scale, init } = useAutoFit();
 onMounted(() => {
-  // init({
-  //   el: "main",
-  //   width: 1136,
-  //   height: 640,
-  // });
+  // testUtils();
+  testGameEvent();
 });
 </script>
 

@@ -1,7 +1,9 @@
 import GameEventPromise from "@/core/gameEventPromise";
-import { createSeedRadom, eventLog } from "@/utils";
+import { gameLog } from "@/core/utils";
+import { createSeedRadom } from "@/utils";
 
 const radom = createSeedRadom(1000); // 创建种子
+
 class GameEvent {
   #promise;
   constructor(name) {
@@ -15,10 +17,11 @@ class GameEvent {
     this.parent = undefined;
     this.next = [];
     this.after = [];
-    this.content = "";
+    this.content = undefined;
     this.result = {}; // 当前事件执行结果
     this.subResult = {}; // 子事件执行结果  `${eventId}-status`   `${eventId}-result`
-    this.step = 1; // 事件执行步骤
+    this.step = 0; // 事件执行步骤
+    this.timing = undefined; // 事件执行时机(依次添加before/begin/end/after)
     // other attrs
     this.player = {};
     this.source = {};
@@ -31,16 +34,20 @@ class GameEvent {
     this.baseDamage = 0;
   }
 
+  // 初始化事件
   static initGameEvent() {
     return new GameEvent().toPromise();
   }
 
-  goto(step) {
-    this.step = step;
+  // 完成事件
+  finish() {
+    this.isFinish = true;
+    this.resolve?.();
     return this;
   }
-  redo() {
-    this.step--;
+  // 跳转到指定步骤
+  goto(step) {
+    this.step = step - 2;
     return this;
   }
   setContent(content) {
@@ -49,45 +56,33 @@ class GameEvent {
   }
   // todo
   getParent(level, keyword) {}
-  insertNext(name) {
-    const next = new GameEvent(name);
-    this.next.push(next);
-    eventLog(`insertNext: 插入【${next.eventName}】`);
-    return this;
-  }
-  insertAfter(name) {
-    const after = new GameEvent(name);
-    this.after.push(after);
-    eventLog(`insertAfter: 插入【${after.eventName}】`);
-    return this;
-  }
-  // 事件结束
-  finish(result) {
-    this.isFinish = true;
-    this.result = result;
-    this.resolve?.();
-    eventLog(`执行【${this.eventName}】完成`);
-    return this;
-  }
+
   // 生成Promise
   toPromise() {
     !this.#promise && (this.#promise = new GameEventPromise(this));
     return this.#promise;
   }
+
   // 触发新事件
   trigger(name) {
+    if (name === "gameStart") {
+      // 广播游戏开始
+    }
+    gameLog(`【${name}】创建`);
+    const needTimingEventName = ["gameDraw", "gamePhaseLoop"]; // todo
+    return this.insertNext(name, needTimingEventName.includes(name));
+  }
+  insertNext(name, needTiming = false) {
     const next = new GameEvent(name);
+    needTiming && (next.timing = 0);
     this.next.push(next);
-    this.subResult[`${next.eventId}-status`] = "undone";
-    eventLog(`添加【${next.eventName}】`);
-    return this;
+    return next;
+  }
+  insertAfter(name, needTiming = false) {
+    const after = new GameEvent(name);
+    needTiming && (after.timing = 0);
+    this.after.push(after);
+    return after;
   }
 }
-
 export default GameEvent;
-
-const EventManager = {
-  event: GameEvent.initGameEvent(),
-};
-
-export { EventManager };
