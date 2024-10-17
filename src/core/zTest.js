@@ -11,7 +11,9 @@ import GameContent from "./gameContent";
 import GameEngine from "./gameEngine";
 import GameEvent from "./gameEvent";
 import GameStatus from "./gameStatus";
-import { generateCard, generateHero } from "./gameLoad";
+import GameAi from "./gameAi";
+import GameLibrary from "./gameLibrary";
+import { onBoot } from "./gameBoot";
 
 /** =========================测试utils============================== */
 
@@ -47,20 +49,12 @@ function testUtils() {
 }
 function testGameEvent() {
   GameEngine.boot();
-  GameEngine.onload();
-  GameEngine.start();
 }
-function testCardOrHero() {
-  const cards = generateCard();
-  const heros = generateHero();
-  console.log(cards, heros);
-}
+function testCardOrHero() {}
 
 async function testMain() {
-  // testCardOrHero();
-  const sc = await dynamicImportModule("card", "defaultCard");
-
-  console.log(sc);
+  await onBoot();
+  console.log(GameLibrary);
 }
 
 export { testMain };

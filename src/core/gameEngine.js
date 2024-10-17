@@ -1,22 +1,20 @@
+import GameAi from "@/core/gameAi";
 import GameContent from "@/core/gameContent";
 import GameEvent from "@/core/gameEvent";
+import GameLibrary from "@/core/gameLibrary";
 import GameStatus from "@/core/gameStatus";
 import { AsyncFunction, UnInstantiated, gameLog, delay } from "@/core/utils";
 import { pick, cloneDeep } from "lodash-es";
 
+const _ai = GameAi;
 const _content = GameContent;
 const _event = GameEvent;
+const _library = GameLibrary;
 const _status = GameStatus;
 
 class GameEngine extends UnInstantiated {
-  static boot() {
-    console.log("【游戏启动】");
-  }
-  static onload() {
-    console.log("【游戏加载】");
-  }
   static start() {
-    console.log("【游戏开始】");
+    gameLog("【游戏开始】");
     // 初始化事件
     _status.event = _event.initGameEvent();
     // 触发游戏事件
@@ -25,17 +23,17 @@ class GameEngine extends UnInstantiated {
     _game.loop();
   }
   static over() {
-    console.log("【游戏结束】");
+    gameLog("【游戏结束】");
     _status.over = true;
   }
 
   static pause() {
-    console.log("【游戏暂停】");
+    gameLog("【游戏暂停】");
     _status.pause = true;
   }
 
   static resume() {
-    console.log("【游戏恢复】");
+    gameLog("【游戏恢复】");
     _status.pause = false;
     _game.loop();
   }
@@ -149,6 +147,7 @@ function logEventPromise(event) {
   }
   return logEvent(event);
 }
+
 export default GameEngine;
 
 // 暴露GameEngine供其内部调用

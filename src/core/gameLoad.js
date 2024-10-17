@@ -1,6 +1,9 @@
 import Card from "@/core/gameCard";
+import GameEngine from "@/core/gameEngine";
 import GameLibrary from "@/core/gameLibrary";
+import { gameLog } from "@/core/utils";
 
+const _game = GameEngine;
 const _library = GameLibrary;
 
 function generateCard(group, card, skill, list) {
@@ -11,7 +14,7 @@ function generateCard(group, card, skill, list) {
         group,
         cardType: card[name].type,
         cardName: name,
-        cardCnName: card[name].cnName,
+        cardCnName: card[name].name,
         cardDes: card[name].des,
       };
       result.push(new Card(item));
@@ -23,12 +26,12 @@ function generateCard(group, card, skill, list) {
 function generateHero() {}
 
 async function onLoad() {
+  gameLog("【游戏加载】");
   // 解析资源
   const cardPack = _library.cardPack;
   const heroPack = _library.heroPack;
   const modePack = _library.modePack;
   // 卡牌
-  const cardList = [];
   for (const i in cardPack) {
     const card = cardPack[i].card;
     const skill = cardPack[i].skill;
@@ -36,6 +39,8 @@ async function onLoad() {
     _library.cardList.length = 0;
     _library.cardList.push(...generateCard(i, card, skill, list));
   }
+  // ...其他加载操作
+  _game.start();
 }
 
 export { onLoad };
