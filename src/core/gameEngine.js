@@ -1,9 +1,8 @@
-import emitter from "@/core/emitter";
 import GameContent from "@/core/gameContent";
 import GameEvent from "@/core/gameEvent";
 import GameStatus from "@/core/gameStatus";
-import { AsyncFunction, UnInstantiated, gameLog } from "@/core/utils";
-import { pick } from "lodash-es";
+import { AsyncFunction, UnInstantiated, gameLog, delay } from "@/core/utils";
+import { pick, cloneDeep } from "lodash-es";
 
 const _content = GameContent;
 const _event = GameEvent;
@@ -38,6 +37,11 @@ class GameEngine extends UnInstantiated {
   static resume() {
     console.log("【游戏恢复】");
     _status.pause = false;
+    _game.loop();
+  }
+
+  static async delay(ms) {
+    await delay(ms);
   }
 
   // 事件循环
@@ -53,7 +57,13 @@ class GameEngine extends UnInstantiated {
         next.parent = event;
         _status.event = next;
       } else if (event.isFinish) {
-        if (event.after.length) {
+        if (event.timing === 2) {
+          event.trigger(`${event.eventName}End`);
+          event.timing += 1;
+        } else if (event.timing === 3) {
+          event.trigger(`${event.eventName}After`);
+          event.timing += 1;
+        } else if (event.after.length) {
           const after = event.after.shift();
           after.parent = event;
           _status.event = after;
@@ -70,9 +80,17 @@ class GameEngine extends UnInstantiated {
         if (0) {
           event.finish();
         }
-        await _game.runContent(event).then(() => {
-          event.step += 1;
-        });
+        if (event.timing === 0) {
+          event.trigger(`${event.eventName}Before`);
+          event.timing += 1;
+        } else if (event.timing === 1) {
+          event.trigger(`${event.eventName}Begin`);
+          event.timing += 1;
+        } else {
+          await _game.runContent(event).then(() => {
+            event.step += 1;
+          });
+        }
       }
     }
   }
@@ -82,7 +100,11 @@ class GameEngine extends UnInstantiated {
       if (typeof event.content !== "function") {
         event.setContent(_game.transformEventFunction(event));
       }
-      await event.content(event, _game); // todo 入参  event,game   真正执行step入参
+      // 执行content时入参必须保证与new Function参数一致
+      await event.content(event, _game).catch((err) => {
+        gameLog(`【${event.eventName}】执行出错`);
+        console.error(err);
+      });
       resolve();
     });
   }
@@ -92,9 +114,9 @@ class GameEngine extends UnInstantiated {
     let fnKeyList = [];
     const fn = _content[event.eventName];
     if (!fn) {
-      return new AsyncFunction("event.finish();return;");
+      return new AsyncFunction("event", "event.finish();return;");
     } else {
-      fnMap = fn({ event, game: _game }); // todo 入参  { event, game }  形参，规范化展示
+      fnMap = fn({}); // 规范化参数，实际{ event, game:_game }
       fnKeyList = Object.keys(fnMap).sort(
         (a, b) => Number(a.replace("step", "")) - Number(b.replace("step", ""))
       );
@@ -109,7 +131,8 @@ class GameEngine extends UnInstantiated {
         str += `case ${index}:${functionBody}break;`;
       });
       str += "}";
-      return new AsyncFunction("event", "game", str); // todo 生成器真正执行step入参
+      // 构造函数时的入参必须保证与执行时一致
+      return new AsyncFunction("event", "game", str);
     }
   }
 }
@@ -117,23 +140,15 @@ class GameEngine extends UnInstantiated {
 function logEventPromise(event) {
   function logEvent(e) {
     const result = pick(e, ["eventName", "isFinish", "content", "step"]);
-    if (e.next) {
-      result.next = e.next.map(logEvent);
-    }
-    if (e.parent) {
-      result.parent = logEvent(e.parent);
-    }
-    if (e.result) {
-      result.result = { ...e.result };
-    }
-    if (e.subResult) {
-      result.subResult = { ...e.subResult };
-    }
+    e.next && (result.next = e.next.map(logEvent));
+    e.after && (result.after = e.after.map(logEvent));
+    e.parent && (result.parent = logEvent(e.parent));
+    e.result && (result.result = cloneDeep(e.result));
+    e.subResult && (result.subResult = cloneDeep(e.subResult));
     return result;
   }
   return logEvent(event);
 }
-
 export default GameEngine;
 
 // 暴露GameEngine供其内部调用

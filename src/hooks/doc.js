@@ -150,3 +150,7 @@ const p = (fn) =>
 // 3.   step4: game.chooseCharacter()   step5:event.trigger('gameStart')   step6:game.gameDraw  step7:game.phaseLoop
 // 4.  game.createEvent('chooseCharacter')   game.me.chooseButton(game.createEvent('chooseButton'))
 // 5. => game => gameDraw | phaseLoop  =>  phase
+
+// lib.imported['card']['standard'] = { name: 'standard' }
+// lib.imported['character']['sp'] = { name: 'sp' }
+// lib.imported['mode']['boss'] = { name: 'boss' }

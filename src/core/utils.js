@@ -44,10 +44,42 @@ function runGenAsync(gen) {
   }
   next();
 }
+function createSeedRadom(initSeed) {
+  function seedRadom(seed) {
+    seed = (seed * 9301 + 49297) % 233280;
+    return seed / 233280;
+  }
+  let seed = initSeed;
+  return () => {
+    const result = seedRadom(seed);
+    seed += result;
+    return result;
+  };
+}
+function getRadomBySeed(seed, count) {
+  const radom = createSeedRadom(seed);
+  let result = undefined;
+  for (let i = 0; i < count; i++) {
+    result = radom();
+  }
+  return result;
+}
 
 function gameLog() {
   console.log(...arguments);
 }
+
+// 动态导入模块,此处的路径是相对路径
+function dynamicImportModule(path) {
+  return new Promise((resolve, reject) => {
+    import(`../gamePackage/${path}.js`)
+      .then((module) => {
+        resolve(module);
+      })
+      .catch((err) => reject(err));
+  });
+}
+
 export {
   AsyncFunction,
   isAsyncFunction,
@@ -56,7 +88,10 @@ export {
   delay,
   runGen,
   runGenAsync,
+  createSeedRadom,
+  getRadomBySeed,
   gameLog,
+  dynamicImportModule,
 };
 
 // 无法被实例化类(不可使用new关键字)

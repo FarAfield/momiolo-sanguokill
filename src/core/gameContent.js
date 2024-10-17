@@ -1,5 +1,3 @@
-import { delay } from "@/core/utils";
-
 const GameContent = {
   game: function ({ event, game }) {
     function step1() {
@@ -15,7 +13,6 @@ const GameContent = {
       event.trigger("gamePhaseLoop");
     }
     function step5() {
-      console.log("游戏结束");
       game.over();
     }
     return {
@@ -80,6 +77,14 @@ const GameContent = {
     }
     return {
       step1,
+    };
+  },
+  gameDrawBefore: function ({ event }) {
+    return {
+      step1: async function () {
+        console.log("打断父级事件");
+        event.parent.finish();
+      },
     };
   },
 };

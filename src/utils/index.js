@@ -52,28 +52,3 @@ export function getNoRepeatNum(array, length) {
   });
   return result;
 }
-
-export function createSeedRadom(initSeed) {
-  function seedRadom(seed) {
-    seed = (seed * 9301 + 49297) % 233280;
-    return seed / 233280;
-  }
-  let seed = initSeed;
-  return () => {
-    const result = seedRadom(seed);
-    seed += result;
-    return result;
-  };
-}
-export function getRadomBySeed(seed, count) {
-  const radom = createSeedRadom(seed);
-  let result = undefined;
-  for (let i = 0; i < count; i++) {
-    result = radom();
-  }
-  return result;
-}
-
-export function eventLog() {
-  console.log(...arguments);
-}

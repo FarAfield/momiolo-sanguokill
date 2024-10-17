@@ -1,6 +1,5 @@
 import GameEventPromise from "@/core/gameEventPromise";
-import { gameLog } from "@/core/utils";
-import { createSeedRadom } from "@/utils";
+import { createSeedRadom, gameLog } from "@/core/utils";
 
 const radom = createSeedRadom(1000); // 创建种子
 

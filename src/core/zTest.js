@@ -4,12 +4,14 @@ import {
   delay,
   runGen,
   runGenAsync,
+  dynamicImportModule,
   UnInstantiated,
 } from "./utils";
 import GameContent from "./gameContent";
 import GameEngine from "./gameEngine";
 import GameEvent from "./gameEvent";
 import GameStatus from "./gameStatus";
+import { generateCard, generateHero } from "./gameLoad";
 
 /** =========================测试utils============================== */
 
@@ -43,13 +45,22 @@ function testUtils() {
   });
   //   console.log(new UnInstantiated());
 }
-
-const content = {};
-
 function testGameEvent() {
   GameEngine.boot();
   GameEngine.onload();
   GameEngine.start();
 }
+function testCardOrHero() {
+  const cards = generateCard();
+  const heros = generateHero();
+  console.log(cards, heros);
+}
 
-export { testUtils, testGameEvent };
+async function testMain() {
+  // testCardOrHero();
+  const sc = await dynamicImportModule("card", "defaultCard");
+
+  console.log(sc);
+}
+
+export { testMain };
