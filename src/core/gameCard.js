@@ -5,6 +5,9 @@ class Card {
   cardCnName; // 卡牌中文名 例如：闪现
   cardDes; // 卡牌描述
 
+  // 额外属性
+  isVirtual = false;
+
   constructor(card) {
     Object.keys(card).forEach((key) => {
       this[key] = card[key];

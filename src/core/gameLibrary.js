@@ -10,5 +10,6 @@ const GameLibrary = {
   },
   cardList: [],
   heroList: [],
+  modeList: [],
 };
 export default GameLibrary;

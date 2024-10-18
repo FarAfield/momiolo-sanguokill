@@ -2,7 +2,25 @@ const moduleType = "hero";
 const moduleName = "basic";
 function importModule(game) {
   return {
-    list: [1, 2, 3],
+    hero: {
+      Yasuo: {
+        skills: ["Wind Wall"],
+      },
+    },
+    skill: {
+      ["Wind Wall"]: {
+        effect: function (event, game) {
+          // const {player,source,target,card} = event;
+          // const {cardName} = card;
+          // const {cardDes} = card;
+          // const {cardCnName} = card;
+        },
+      },
+    },
+    translate: {
+      ["Yasuo"]: "亚索",
+      ["Wind Wall"]: "风墙",
+    },
   };
 }
 export { moduleType, moduleName, importModule };

@@ -5,8 +5,6 @@ function importModule(game) {
     card: {
       flash: {
         type: "basic",
-        name: "闪现",
-        des: "闪现一段距离",
         skills: ["flash"], // 或者 effect:function(event,game){}
       },
     },
@@ -19,6 +17,10 @@ function importModule(game) {
           //   const { cardCnName } = card;
         },
       },
+    },
+    translate: {
+      flash: "闪现",
+      flash_des: "闪现一段距离",
     },
     list: [["flash", 5]],
   };
