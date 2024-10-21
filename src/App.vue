@@ -6,21 +6,17 @@
 
 <script setup>
 import { onMounted } from "vue";
-import useAutoFit from "./hooks/useAutoFit";
-import { testMain } from "./core/zTest";
+import useAutoFit from "@/hooks/useAutoFit";
 
 const { scale, init } = useAutoFit();
-onMounted(() => {
-  testMain();
-});
+onMounted(() => {});
 </script>
 
 <style lang="scss" scoped>
 #main {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: 1280px;
+  height: 720px;
+  box-sizing: border-box;
+  border: 1px solid red;
 }
 </style>

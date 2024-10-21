@@ -1,7 +1,7 @@
 import { createPinia } from "pinia";
-// import useGameStore from "./useGameStore";
+import useGameStore from "@/store/useGameStore";
 
 const pinia = createPinia();
 
-// export { useGameStore };
+export { useGameStore };
 export default pinia;

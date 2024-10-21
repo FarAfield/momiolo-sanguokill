@@ -54,7 +54,6 @@ function testCardOrHero() {}
 
 async function testMain() {
   await onBoot();
-  console.log(GameLibrary);
 }
 
 export { testMain };

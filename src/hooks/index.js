@@ -1,3 +1,3 @@
-import useAutoFit from "./useAutoFit";
+import useAutoFit from "@/hooks/useAutoFit";
 
 export { useAutoFit };
