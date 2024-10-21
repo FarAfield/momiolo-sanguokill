@@ -1,16 +1,20 @@
 import GameAi from "@/core/gameAi";
 import GameContent from "@/core/gameContent";
 import GameEvent from "@/core/gameEvent";
+import GameGet from "@/core/gameGet";
 import GameLibrary from "@/core/gameLibrary";
 import GameStatus from "@/core/gameStatus";
+import GameUi from "@/core/gameUi";
 import { AsyncFunction, UnInstantiated, gameLog, delay } from "@/core/utils";
 import { pick, cloneDeep } from "lodash-es";
 
 const _ai = GameAi;
 const _content = GameContent;
 const _event = GameEvent;
+const _get = GameGet;
 const _library = GameLibrary;
 const _status = GameStatus;
+const _ui = GameUi;
 
 class GameEngine extends UnInstantiated {
   static start() {

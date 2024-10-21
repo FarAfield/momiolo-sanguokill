@@ -1,2 +1,2 @@
-# momiolo-sanguokill
-三国杀
+# momiolo-lolkill
+联盟杀
