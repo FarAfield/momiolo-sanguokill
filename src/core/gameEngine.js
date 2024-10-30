@@ -46,6 +46,11 @@ class GameEngine extends UnInstantiated {
     await delay(ms);
   }
 
+  // 洗牌
+  static washCard() {
+    _status.cardPile.sort(() => Math.random() > 0.5);
+  }
+
   // 事件循环
   static async loop() {
     while (true) {
@@ -103,7 +108,7 @@ class GameEngine extends UnInstantiated {
         event.setContent(_game.transformEventFunction(event));
       }
       // 执行content时入参必须保证与new Function参数一致
-      await event.content(event, _game).catch((err) => {
+      await event.content(event, _game, _get, _ui).catch((err) => {
         gameLog(`【${event.eventName}】执行出错`);
         console.error(err);
       });
@@ -134,7 +139,7 @@ class GameEngine extends UnInstantiated {
       });
       str += "}";
       // 构造函数时的入参必须保证与执行时一致
-      return new AsyncFunction("event", "game", str);
+      return new AsyncFunction("event", "game", "get", "ui", str);
     }
   }
 }

@@ -1,14 +1,14 @@
 <template>
-  <div class="root">测试页</div>
+  <div class="root">
+    <a-space>
+      <a-button type="primary" @click="testMain">测试</a-button>
+    </a-space>
+  </div>
 </template>
 
 <script setup>
 import { onMounted } from "vue";
 import { testMain } from "@/core/zTest";
-
-onMounted(async () => {
-  await testMain();
-});
 </script>
 <style lang="scss" scoped>
 .root {

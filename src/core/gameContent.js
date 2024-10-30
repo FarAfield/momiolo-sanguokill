@@ -1,6 +1,13 @@
 const GameContent = {
-  game: function ({ event, game }) {
+  game: function ({ event, game, get, ui }) {
     function step1() {
+      // 创建玩家
+      ui.createPlayer(2);
+      // 创建卡牌
+      ui.createCard();
+      // 洗牌
+      game.washCard();
+      // 选择英雄
       event.trigger("chooseHero");
     }
     function step2() {
@@ -12,24 +19,16 @@ const GameContent = {
     function step4() {
       event.trigger("gamePhaseLoop");
     }
-    function step5() {
-      game.over();
-    }
     return {
       step1,
       step2,
       step3,
       step4,
-      step5,
     };
   },
   chooseHero: function ({ event }) {
     async function step1() {
-      await new Promise((resolve) => {
-        setTimeout(() => {
-          resolve();
-        }, 3000);
-      });
+      await game.delay(3000);
       console.log("chooseHero  done");
       event.finish();
     }
@@ -39,12 +38,6 @@ const GameContent = {
   },
   gameStart: function ({ event }) {
     async function step1() {
-      await new Promise((resolve) => {
-        setTimeout(() => {
-          resolve();
-        }, 3000);
-      });
-      console.log("gameStart  done");
       event.finish();
     }
     return {
@@ -53,11 +46,7 @@ const GameContent = {
   },
   gameDraw: function ({ event }) {
     async function step1() {
-      await new Promise((resolve) => {
-        setTimeout(() => {
-          resolve();
-        }, 3000);
-      });
+      await game.delay(3000);
       console.log("gameDraw  done");
       event.finish();
     }
@@ -65,26 +54,19 @@ const GameContent = {
       step1,
     };
   },
-  gamePhaseLoop: function ({ event }) {
+  gamePhaseLoop: function ({ event, get }) {
     async function step1() {
-      await new Promise((resolve) => {
-        setTimeout(() => {
-          resolve();
-        }, 3000);
-      });
-      console.log("gamePhaseLoop  done");
-      event.finish();
+      get.gameRound(get.gameRound() + 1);
+      if (get.gameRound() >= 3) {
+        game.over();
+      } else {
+        await game.delay(3000);
+        console.log("gamePhaseLoop  done", `第${get.gameRound()}轮`);
+        event.goto(1);
+      }
     }
     return {
       step1,
-    };
-  },
-  gameDrawBefore: function ({ event }) {
-    return {
-      step1: async function () {
-        console.log("打断父级事件");
-        event.parent.finish();
-      },
     };
   },
 };

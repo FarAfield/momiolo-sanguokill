@@ -6,5 +6,7 @@ const GameStatus = {
   ai: {},
   event: null,
   history: [],
+  playerList: [],
+  cardPile: [],
 };
 export default GameStatus;

@@ -1,3 +1,22 @@
+/**
+ *   onBoot()  加载资源, initGameEvent(移动到game.start实现)
+ *   onLoad()  解析资源，[trigger.game, gameLoop](移动到game.start实现)
+ *   game.start()  游戏开始(initGameEvent,trigger.game,gameLoop)
+ *   trigger.game
+ *   1.根据模式替换英雄、牌堆、技能等(暂未实现)
+ *   2.prepareArena
+ *   2.1 showHistory
+ *   2.2 create.players
+ *   2.3 create.me
+ *   2.4 create.cards
+ *   3.chooseHero
+ *   4.trigger.gameStart
+ *   5.game.gameDraw
+ *   6.game.phaseLoop
+ *
+ *
+ */
+
 // gameAi  游戏AI相关实现  TODO
 
 // gameBoot 游戏启动相关实现(firstStep)
@@ -42,3 +61,13 @@
 //   .map((i) => addOpportunity(i))
 //   .flat()
 //   .concat(...["dieBefore", "Begin"]); // 死亡前/时
+
+//  gameStart    create.players(num)   create.me()   create.cardsAsync()
+//  chooseHero   done   =>  radomHero
+
+//  0  1  2  3  4  5  6  7
+//           0  1  2  3  4
+//  num = 1  current => 1    current = next   num++    =>   done  =>
+//  num = 2
+//  ...
+//  done
