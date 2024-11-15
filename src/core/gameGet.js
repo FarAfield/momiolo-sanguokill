@@ -10,11 +10,16 @@ class GameGet extends UnInstantiated {
   static gameRound(num) {
     return !num ? _status.round : (_status.round = num);
   }
+
+  static gamePlayerList() {
+    return _status.playerList;
+  }
+
   // 获取/添加游戏牌堆
-  static gamePile(pile) {
+  static gameCardPile(pile) {
     return !pile?.length
-      ? _library.cardPile
-      : (_library.cardPile = _library.cardPile.concat(pile));
+      ? _status.cardPile
+      : (_status.cardPile = _status.cardPile.concat(pile));
   }
   // 优先级获取
   static priority() {}

@@ -1,69 +1,37 @@
 import GameEngine from "@/core/gameEngine";
 import GameLibrary from "@/core/gameLibrary";
 import { gameLog } from "@/core/utils";
+import { cloneDeep, omit } from "lodash-es";
 
 const _game = GameEngine;
 const _library = GameLibrary;
 
-function generateCard(group, card, skill, translate, list) {
-  const result = [];
-  list.forEach(([name, count]) => {
-    new Array(count).fill().forEach(() => {
-      const item = {
-        group,
-        cardType: card[name].type,
-        cardName: name,
-        cardCnName: translate[name],
-        cardDes: translate[`${name}_des`],
-      };
-      result.push(item);
-    });
-  });
-  return result;
-}
-
-function generateHero(group, hero, skill, translate) {
-  const result = [];
-  Object.entries(hero).forEach(([name, { skills }]) => {
-    result.push({
-      group,
-      heroName: name,
-      heroCnName: translate[name],
-      heroSkills: skills,
-    });
-  });
-  return result;
-}
-
 async function onLoad() {
-  gameLog("【游戏加载】");
+  gameLog("【资源加载中...】");
   // 解析资源
-  const cardPack = _library.cardPack;
-  const heroPack = _library.heroPack;
-  const modePack = _library.modePack;
-  // 卡牌
-  for (const i in cardPack) {
-    const card = cardPack[i].card;
-    const skill = cardPack[i].skill;
-    const translate = cardPack[i].translate;
-    const list = cardPack[i].list;
-    _library.cardList.length = 0;
-    _library.cardList.push(...generateCard(i, card, skill, translate, list));
+  const champion = _library.champion;
+  const equipment = _library.equipment;
+  const spellRune = _library.spellRune;
+  // 对英雄信息进行提取
+  for (const i of champion) {
+    const hero = omit(cloneDeep(i), ["effects"]);
+    Object.assign(_library.effectMap, i.effects);
+    _library.heroList.push(hero);
   }
-  // 英雄
-  for (const i in heroPack) {
-    const hero = heroPack[i].hero;
-    const skill = heroPack[i].skill;
-    const translate = heroPack[i].translate;
-    _library.heroList.length = 0;
-    _library.heroList.push(...generateHero(i, hero, skill, translate));
+  // 把装备和符文转换为卡牌
+  for (const i of equipment) {
+    const card = omit(cloneDeep(i), ["effects"]);
+    Object.assign(_library.effectMap, i.effects);
+    card.package = "equipment";
+    _library.cardList.push(card);
   }
-  // 模式
-  for (const i in modePack) {
-    _library.modeList.length = 0;
-    _library.modeList.push(i);
+  for (const i of spellRune) {
+    const card = omit(cloneDeep(i), ["effects"]);
+    Object.assign(_library.effectMap, i.effects);
+    card.package = "spellRune";
+    _library.cardList.push(card);
   }
-  // ...其他加载操作
+  gameLog("【资源加载完成】");
   _game.start();
 }
 

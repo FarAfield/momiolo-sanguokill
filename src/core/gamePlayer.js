@@ -1,12 +1,18 @@
 class Player {
-  group; // 卡包组   例如: basic
-  playerName; // 名称
-  playerGroup; // 阵营
+  // 基础属性
+  playerId;
+  playerTitle;
+  playerName;
+  playerAvatar;
+  playerSkin = "default";
+  skills = [];
+  // 其他属性
   playerSeatNum = 0; // 位次
-  playerMaxHp = 0; // 最大体力上限
-  playerHp = 0; // 当前体力
-
-  skills = []; // 技能
+  playerMaxHp = 0;
+  playerHp = 0;
+  playerMaxPow = 0;
+  playerPow = 0;
+  // 额外属性
   tempSkills = []; // 临时技能
   actionHistory = []; // 操作记录
   marks = {}; // 标记

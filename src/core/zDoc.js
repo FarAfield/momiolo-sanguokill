@@ -71,3 +71,8 @@
 //  num = 2
 //  ...
 //  done
+
+//  champion
+//  boss
+//  equipment  sword/shield
+//  spellRune  spell/rune

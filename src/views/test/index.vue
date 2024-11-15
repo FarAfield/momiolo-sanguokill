@@ -2,7 +2,7 @@
   <div class="root">
     <a-space>
       <!-- <a-button type="primary" @click="testMain">测试</a-button> -->
-      <a-button type="primary" @click="parse">解析</a-button>
+      <a-button type="primary" @click="testMain">解析</a-button>
     </a-space>
   </div>
 </template>
@@ -25,7 +25,7 @@ async function parse() {
     const result = parseData(name, json[name]);
     championResult.push(result);
   }
-  console.log(championResult);
+  console.log(championResult[0]);
 }
 function parseData(name, data) {
   return {

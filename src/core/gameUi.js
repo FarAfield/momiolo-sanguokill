@@ -13,14 +13,21 @@ class GameUi extends UnInstantiated {
       return new GamePlayer({
         playerSeatNum: i,
         playerMaxHp: 100,
-        playerHp: 10,
+        playerHp: 100,
+        playerMaxPow: 8,
+        playerPow: 8,
       });
     });
   }
 
-  static createCard(cardName) {
+  static createCard() {
     const cardList = _library.cardList;
-    _status.cardPile = cardList.map((i) => new GameCard(i));
+    function repeatArray(arr, n) {
+      return Array(n)
+        .fill(arr)
+        .flatMap((x) => x);
+    }
+    _status.cardPile = repeatArray(cardList, 3).map((i) => new GameCard(i));
   }
 }
 

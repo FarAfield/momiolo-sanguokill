@@ -48,7 +48,7 @@ class GameEngine extends UnInstantiated {
 
   // 洗牌
   static washCard() {
-    _status.cardPile.sort(() => Math.random() > 0.5);
+    _status.cardPile.sort(() => Math.random() - 0.5);
   }
 
   // 事件循环

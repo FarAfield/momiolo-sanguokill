@@ -70,19 +70,8 @@ function gameLog() {
 }
 
 // 动态导入模块,此处的路径是相对路径
-function dynamicImportModule(type, name) {
-  let importModule = null;
-  switch (type) {
-    case "card":
-      importModule = import(`../package/card/${name}.js`);
-      break;
-    case "hero":
-      importModule = import(`../package/hero/${name}.js`);
-      break;
-    case "mode":
-      importModule = import(`../package/mode/${name}.js`);
-      break;
-  }
+function dynamicImportModule(packageName, fileName) {
+  const importModule = import(`../lolSource/${packageName}/${fileName}.js`);
   return new Promise((resolve, reject) => {
     importModule
       .then((module) => {

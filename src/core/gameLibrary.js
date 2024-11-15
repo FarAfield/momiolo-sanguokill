@@ -1,18 +1,15 @@
 import { UnInstantiated } from "@/core/utils";
 
 class GameLibrary extends UnInstantiated {
-  static cardPack = {
-    standard: {},
-  };
-  static heroPack = {
-    standard: {},
-  };
-  static modePack = {
-    standard: {},
-  };
-  static cardList = [];
+  // 导入的资源
+  static champion = [];
+  static equipment = [];
+  static spellRune = [];
+  // 解析后的资源
   static heroList = [];
-  static modeList = [];
+  static cardList = [];
+  static effectMap = {};
+  // 实际游戏资源
 }
 
 export default GameLibrary;
