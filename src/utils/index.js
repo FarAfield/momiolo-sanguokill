@@ -4,19 +4,19 @@ export function getBackgroundImage(name) {
     new URL(`../assets/images/background/${name}.png`, import.meta.url).href
   })`;
 }
-export function getHeroImage(name) {
+export function getHeroSkin(name) {
   return `url(${
-    new URL(`../assets/images/hero/${name}.png`, import.meta.url).href
+    new URL(`../assets/images/skin/${name}.jpg`, import.meta.url).href
   })`;
 }
-export function getCardImage(name) {
-  return `url(${
-    new URL(`../assets/images/card/${name}.png`, import.meta.url).href
-  })`;
-}
-export function getSvgImage(name) {
-  return `url(${new URL(`../assets/svg/${name}.svg`, import.meta.url).href})`;
-}
+// export function getCardImage(name) {
+//   return `url(${
+//     new URL(`../assets/images/card/${name}.png`, import.meta.url).href
+//   })`;
+// }
+// export function getSvgImage(name) {
+//   return `url(${new URL(`../assets/svg/${name}.svg`, import.meta.url).href})`;
+// }
 export function getRandomNumber(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }

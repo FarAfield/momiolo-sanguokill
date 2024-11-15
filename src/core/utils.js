@@ -81,6 +81,10 @@ function dynamicImportModule(packageName, fileName) {
   });
 }
 
+function getRandomNumber(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 export {
   AsyncFunction,
   isAsyncFunction,
@@ -93,6 +97,7 @@ export {
   getRadomBySeed,
   gameLog,
   dynamicImportModule,
+  getRandomNumber,
 };
 
 // 无法被实例化类(不可使用new关键字)

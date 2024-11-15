@@ -4,29 +4,38 @@
     <div class="gameContent">
       <div class="gamePlayer">
         <div class="left">
-          <div class="avatar" v-for="(player, index) in leftPlayerList">
+          <div
+            class="avatar"
+            v-for="(player, index) in leftPlayerList"
+            :style="getSkinStyle(player)"
+          >
             {{ player.id }}
           </div>
         </div>
         <div class="center">
-          <div class="avatar" v-for="(player, index) in centerPlayerList">
+          <div
+            class="avatar"
+            v-for="(player, index) in centerPlayerList"
+            :style="getSkinStyle(player)"
+          >
             {{ player.id }}
           </div>
           <div class="cardPile">
-            <a-button type="primary" @click="count++">点击{{ count }}</a-button>
+            <a-button type="primary" @click="handleStart">开始</a-button>
           </div>
         </div>
         <div class="right">
           <div
             class="avatar"
             v-for="(player, index) in rightPlayerList.reverse()"
+            :style="getSkinStyle(player)"
           >
-            {{ player.id }}
+            {{ player.playerId }}
           </div>
         </div>
       </div>
       <div class="gameMe">
-        <div class="avatar"></div>
+        <div class="avatar" :style="getSkinStyle(me)">{{ me.playerId }}</div>
         <div class="equip"></div>
         <div class="card"></div>
         <div class="action"></div>
@@ -35,15 +44,18 @@
   </div>
 </template>
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, toRefs, watch } from "vue";
 import { useGameStore } from "@/store";
+import { onBoot } from "@/core/gameBoot";
+import { getHeroSkin } from "@/utils";
+import { cloneDeep } from "lodash-es";
 
 const gameStore = useGameStore();
-
-const count = ref(1);
-
+const { me } = toRefs(gameStore);
 const playerList = computed(() => {
-  return Array.from({ length: count.value }, (_, i) => ({ id: i + 1 }));
+  return gameStore.playerList.filter(
+    (i) => i.playerSeatNum === gameStore.me.playerSeatNum
+  );
 });
 const rightPlayerList = computed(() => {
   if ([2, 3].includes(playerList.value.length)) {
@@ -89,6 +101,31 @@ const justifyContent = computed(() => {
       return "space-between";
   }
 });
+
+function getSkinStyle(player) {
+  console.log(player, "getSkinStyle");
+
+  return player.playerSkin
+    ? {
+        "background-image": `${getHeroSkin(player.playerSkin.replace(".jpg", ""))}`,
+      }
+    : {};
+}
+
+function handleStart() {
+  onBoot();
+}
+
+watch(
+  me,
+  (v) => {
+    console.log(cloneDeep(v), "watch");
+  },
+  {
+    deep: true,
+    immediate: true,
+  }
+);
 </script>
 <style lang="scss" scoped>
 .game {
@@ -132,23 +169,26 @@ const justifyContent = computed(() => {
       .avatar {
         width: 108px;
         height: 108px;
-        background-color: aquamarine;
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
       }
       .cardPile {
         margin-top: auto;
         width: 100%;
         height: calc(100% - 128px);
-        background-color: blueviolet;
+        // background-color: blueviolet;
       }
     }
     .gameMe {
       width: 100%;
       height: 240px;
       padding-bottom: 24px;
+      display: flex;
       .avatar {
-        width: 100%;
+        width: 240px;
         height: 100%;
-        background-color: bisque;
+        background-size: 100% 100%;
+        background-repeat: no-repeat;
       }
     }
   }

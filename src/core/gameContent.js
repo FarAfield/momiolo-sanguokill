@@ -26,10 +26,26 @@ const GameContent = {
       step4,
     };
   },
-  chooseHero: function ({ event }) {
+  chooseHero: function ({ event, game, get }) {
     async function step1() {
+      const playerList = get.gamePlayerList();
+      const me = get.gameMe();
+      const heroList = get.heroList();
       await game.delay(3000);
-      console.log("chooseHero  done");
+      // 当前玩家优先选
+      me.chooseHero(heroList[get.random(0, heroList.length - 1)]);
+      game.log(`【你选择了${me.playerTitle}: ${me.playerName}】`);
+      await game.delay(3000);
+      // 剩余的继续选
+      playerList
+        .filter((i) => i.playerSeatNum !== me.playerSeatNum)
+        .forEach((i) => {
+          i.chooseHero(heroList[get.random(0, heroList.length - 1)]);
+          game.log(
+            `【${i.playerSeatNum}号位选择了${me.playerTitle}: ${me.playerName}】`
+          );
+        });
+
       event.finish();
     }
     return {
@@ -57,7 +73,7 @@ const GameContent = {
   gamePhaseLoop: function ({ event, get }) {
     async function step1() {
       get.gameRound(get.gameRound() + 1);
-      if (get.gameRound() >= 3) {
+      if (get.gameRound() > 3) {
         game.over();
       } else {
         await game.delay(3000);

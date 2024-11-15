@@ -4,7 +4,7 @@ class Player {
   playerTitle;
   playerName;
   playerAvatar;
-  playerSkin = "default";
+  playerSkin;
   skills = [];
   // 其他属性
   playerSeatNum = 0; // 位次
@@ -22,6 +22,15 @@ class Player {
     Object.keys(player).forEach((key) => {
       this[key] = player[key];
     });
+  }
+
+  chooseHero(hero) {
+    this.playerId = hero.id;
+    this.playerTitle = hero.title;
+    this.playerName = hero.name;
+    this.playerAvatar = hero.avatar;
+    this.playerSkin = hero.skins[0].skin;
+    this.skills = hero.spells;
   }
 }
 export default Player;

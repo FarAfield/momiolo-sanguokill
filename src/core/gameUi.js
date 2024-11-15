@@ -1,4 +1,4 @@
-import { UnInstantiated } from "@/core/utils";
+import { UnInstantiated, getRandomNumber } from "@/core/utils";
 import GameLibrary from "@/core/gameLibrary";
 import GameStatus from "@/core/gameStatus";
 import GamePlayer from "@/core/gamePlayer";
@@ -18,6 +18,8 @@ class GameUi extends UnInstantiated {
         playerPow: 8,
       });
     });
+    const meIndex = getRandomNumber(0, num - 1);
+    _status.me = _status.playerList[meIndex];
   }
 
   static createCard() {

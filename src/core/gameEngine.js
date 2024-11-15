@@ -51,6 +51,10 @@ class GameEngine extends UnInstantiated {
     _status.cardPile.sort(() => Math.random() - 0.5);
   }
 
+  static log() {
+    gameLog(...arguments);
+  }
+
   // 事件循环
   static async loop() {
     while (true) {
