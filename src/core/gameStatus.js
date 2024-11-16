@@ -1,4 +1,5 @@
 import { useGameStore } from "@/store";
+import { cloneDeep } from "lodash-es";
 
 const gameStore = useGameStore();
 const GameStatus = {
@@ -26,11 +27,15 @@ function deepProxy(obj, syncObj) {
     set: function (target, propKey, value, receiver) {
       Reflect.set(target, propKey, value, receiver);
       if (propKey !== "event") {
-        syncObj[propKey] = value;
+        if (typeof value === "object" && value !== null) {
+          syncObj[propKey] = cloneDeep(value);
+        } else {
+          syncObj[propKey] = value;
+        }
       }
       return true;
     },
   });
 }
-const GameStatusProxy = deepProxy(GameStatus, gameStore.$state);
+const GameStatusProxy = deepProxy(GameStatus, gameStore);
 export default GameStatusProxy;

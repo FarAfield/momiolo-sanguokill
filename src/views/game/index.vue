@@ -54,7 +54,7 @@ const gameStore = useGameStore();
 const { me } = toRefs(gameStore);
 const playerList = computed(() => {
   return gameStore.playerList.filter(
-    (i) => i.playerSeatNum === gameStore.me.playerSeatNum
+    (i) => i.playerSeatNum !== gameStore.me.playerSeatNum
   );
 });
 const rightPlayerList = computed(() => {
@@ -103,29 +103,15 @@ const justifyContent = computed(() => {
 });
 
 function getSkinStyle(player) {
-  console.log(player, "getSkinStyle");
-
   return player.playerSkin
     ? {
         "background-image": `${getHeroSkin(player.playerSkin.replace(".jpg", ""))}`,
       }
     : {};
 }
-
 function handleStart() {
   onBoot();
 }
-
-watch(
-  me,
-  (v) => {
-    console.log(cloneDeep(v), "watch");
-  },
-  {
-    deep: true,
-    immediate: true,
-  }
-);
 </script>
 <style lang="scss" scoped>
 .game {
