@@ -2,7 +2,7 @@ const GameContent = {
   game: function ({ event, game, get, ui }) {
     function step1() {
       // 创建玩家
-      ui.createPlayer(8);
+      ui.createPlayer();
       // 创建卡牌
       ui.createCard();
       // 洗牌
