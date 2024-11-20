@@ -97,9 +97,12 @@ function importModule() {
         cost: 5,
       },
     ],
-    tags: ["Fighter"],
     effects: {
-      AatroxP: (event, game) => {},
+      AatroxP: (event, game, get, ui) => {},
+      AatroxQ: (event, game, get, ui) => {},
+      AatroxW: (event, game, get, ui) => {},
+      AatroxE: (event, game, get, ui) => {},
+      AatroxR: (event, game, get, ui) => {},
     },
   };
 }

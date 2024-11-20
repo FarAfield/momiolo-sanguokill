@@ -31,21 +31,23 @@ const GameContent = {
       const playerList = get.gamePlayerList();
       const me = get.gameMe();
       const heroList = get.heroList();
-      await game.delay(3000);
+      game.log(`你处于【${me.playerSeatNum}】号位`);
       // 当前玩家优先选
+      await game.delay(3000);
       me.chooseHero(heroList[get.random(0, heroList.length - 1)]);
       game.log(`【你选择了${me.playerTitle}: ${me.playerName}】`);
-      await game.delay(3000);
       // 剩余的继续选
-      playerList
-        .filter((i) => i.playerSeatNum !== me.playerSeatNum)
-        .forEach((i) => {
-          i.chooseHero(heroList[get.random(0, heroList.length - 1)]);
-          game.log(
-            `【${i.playerSeatNum}号位选择了${me.playerTitle}: ${me.playerName}】`
-          );
-        });
-
+      const otherPlayerList = playerList.filter(
+        (i) => i.playerSeatNum !== me.playerSeatNum
+      );
+      for (let i = 0; i < otherPlayerList.length; i++) {
+        await game.delay(3000);
+        const hero = heroList[get.random(0, heroList.length - 1)];
+        otherPlayerList[i].chooseHero(hero);
+        game.log(
+          `【${otherPlayerList[i].playerSeatNum}号位选择了${otherPlayerList[i].playerTitle}: ${otherPlayerList[i].playerName}】`
+        );
+      }
       event.finish();
     }
     return {
@@ -60,10 +62,18 @@ const GameContent = {
       step1,
     };
   },
-  gameDraw: function ({ event }) {
+  gameDraw: function ({ event, game, get }) {
     async function step1() {
-      await game.delay(3000);
-      console.log("gameDraw  done");
+      const playerList = get.gamePlayerList();
+      const cardPile = get.gameCardPile();
+      for (let i = 0; i < playerList.length; i++) {
+        await game.delay(3000);
+        playerList[i].handCards = cardPile.splice(0, 2);
+        const cardNames = playerList[i].handCards
+          .map((i) => i.cardName)
+          .join(",");
+        game.log(`玩家【${playerList[i].playerName}】获得两张牌:${cardNames}`);
+      }
       event.finish();
     }
     return {

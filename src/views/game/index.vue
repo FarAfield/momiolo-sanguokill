@@ -9,7 +9,7 @@
             v-for="(player, index) in leftPlayerList"
             :style="getSkinStyle(player)"
           >
-            {{ player.id }}
+            {{ player.playerId }}
           </div>
         </div>
         <div class="center">
@@ -18,7 +18,7 @@
             v-for="(player, index) in centerPlayerList"
             :style="getSkinStyle(player)"
           >
-            {{ player.id }}
+            {{ player.playerId }}
           </div>
           <div class="cardPile">
             <a-button type="primary" @click="handleStart">开始</a-button>
@@ -103,6 +103,7 @@ const justifyContent = computed(() => {
 });
 
 function getSkinStyle(player) {
+  return {};
   return player.playerSkin
     ? {
         "background-image": `${getHeroSkin(player.playerSkin.replace(".jpg", ""))}`,

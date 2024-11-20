@@ -2,7 +2,7 @@
   <div class="root">
     <a-space>
       <!-- <a-button type="primary" @click="testMain">测试</a-button> -->
-      <a-button type="primary" @click="testMain">解析</a-button>
+      <a-button type="primary" @click="parse">解析</a-button>
     </a-space>
   </div>
 </template>
@@ -13,7 +13,7 @@ import { testMain } from "@/core/zTest";
 
 const modules = import.meta.glob("@/assets/zh_CN/champion/*.json");
 async function parse() {
-  return;
+  // return;
   const championResult = [];
   for (const path in modules) {
     const name = path.split("/").at(-1).replace(".json", "");
@@ -25,11 +25,12 @@ async function parse() {
     const result = parseData(name, json[name]);
     championResult.push(result);
   }
-  console.log(championResult[0]);
+  console.log(championResult[1]);
 }
 function parseData(name, data) {
   return {
     [name]: {
+      type: "champion",
       id: data.id,
       title: data.name,
       name: data.title,
@@ -57,7 +58,13 @@ function parseData(name, data) {
           };
         })
       ),
-      tags: data.tags,
+      effects: {
+        [`${name}P`]: "(event, game, get, ui) => {}",
+        [`${name}Q`]: "(event, game, get, ui) => {}",
+        [`${name}W`]: "(event, game, get, ui) => {}",
+        [`${name}E`]: "(event, game, get, ui) => {}",
+        [`${name}R`]: "(event, game, get, ui) => {}",
+      },
     },
   };
 }

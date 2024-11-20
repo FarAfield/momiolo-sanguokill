@@ -17,6 +17,10 @@ class Player {
   actionHistory = []; // 操作记录
   marks = {}; // 标记
   ai = {}; // ai逻辑
+  judgeCards = [];
+  buffCards = [];
+  handCards = [];
+  equipCards = [];
 
   constructor(player) {
     Object.keys(player).forEach((key) => {
