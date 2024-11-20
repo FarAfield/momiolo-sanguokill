@@ -95,6 +95,26 @@ const GameContent = {
       step1,
     };
   },
+  phase: function ({ event, get, game }) {
+    function step1() {
+      event.trigger("phasePre");
+    }
+    function step2() {
+      event.trigger("phaseJudge");
+    }
+    function step3() {
+      event.trigger("phaseDraw");
+    }
+    function step4() {
+      event.trigger("phaseUse");
+    }
+    function step5() {
+      event.trigger("phaseDiscard");
+    }
+    function step6() {
+      event.trigger("phasePost");
+    }
+  },
 };
 
 export default GameContent;
