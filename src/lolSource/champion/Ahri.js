@@ -31,7 +31,7 @@ function importModule() {
       {
         id: "AhriP",
         name: "摄魂夺魄",
-        icon: "Ahri_SoulEater2.png",
+        icon: "AhriP.png",
         description:
           "在击杀9个小兵或野怪后，阿狸会治疗自身。<br>在参与击杀一名敌方英雄后，阿狸会以一个更高的治疗效果来治疗自身。",
       },
