@@ -85,6 +85,32 @@ function getRandomNumber(min, max) {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
+// 静态资源获取函数
+function getAvatarImage(avatarName) {
+  const name = avatarName.replace(".png", "");
+  return new URL(`../assets/images/avatar/${name}.png`, import.meta.url).href;
+}
+function getBackgroundImage(backgroundName) {
+  const name = backgroundName.replace(".png", "");
+  return new URL(`../assets/images/${name}.png`, import.meta.url).href;
+}
+function getEquipImage(equipName) {
+  const name = equipName.replace(".png", "");
+  return new URL(`../assets/images/equip/${name}.png`, import.meta.url).href;
+}
+function getRuneImage(runeName) {
+  const name = runeName.replace(".png", "");
+  return new URL(`../assets/images/rune/${name}.png`, import.meta.url).href;
+}
+function getSkinImage(skinName) {
+  const name = skinName.replace(".png", "");
+  return new URL(`../assets/images/avatar/${name}.png`, import.meta.url).href;
+}
+function getSpellImage(spellName) {
+  const name = spellName.replace(".png", "");
+  return new URL(`../assets/images/spell/${name}.png`, import.meta.url).href;
+}
+
 export {
   AsyncFunction,
   isAsyncFunction,
@@ -98,6 +124,12 @@ export {
   gameLog,
   dynamicImportModule,
   getRandomNumber,
+  getAvatarImage,
+  getBackgroundImage,
+  getEquipImage,
+  getRuneImage,
+  getSkinImage,
+  getSpellImage,
 };
 
 // 无法被实例化类(不可使用new关键字)
