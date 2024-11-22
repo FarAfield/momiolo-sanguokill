@@ -11,7 +11,7 @@ async function onLoad() {
   // 解析资源
   const champion = _library.champion;
   const equipment = _library.equipment;
-  const spellRune = _library.spellRune;
+  const talentRune = _library.talentRune;
   // 对英雄信息进行提取
   for (const i of champion) {
     const hero = omit(cloneDeep(i), ["effects"]);
@@ -25,10 +25,10 @@ async function onLoad() {
     card.package = "equipment";
     _library.cardList.push(card);
   }
-  for (const i of spellRune) {
+  for (const i of talentRune) {
     const card = omit(cloneDeep(i), ["effects"]);
     Object.assign(_library.effectMap, i.effects);
-    card.package = "spellRune";
+    card.package = "talentRune";
     _library.cardList.push(card);
   }
   gameLog("【资源加载完成】");

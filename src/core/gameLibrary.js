@@ -4,7 +4,7 @@ class GameLibrary extends UnInstantiated {
   // 导入的资源
   static champion = [];
   static equipment = [];
-  static spellRune = [];
+  static talentRune = [];
   // 解析后的资源
   static heroList = [];
   static cardList = [];
