@@ -3,7 +3,7 @@ import { createRouter, createWebHashHistory } from "vue-router";
 const appRoutes = [
   {
     path: "/",
-    redirect: "source",
+    redirect: "home",
   },
   {
     path: "/extract",
@@ -36,5 +36,7 @@ const router = createRouter({
   history: createWebHashHistory(),
   routes: appRoutes,
 });
+
+export { appRoutes };
 
 export default router;
