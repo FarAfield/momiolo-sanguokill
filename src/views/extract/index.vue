@@ -1,11 +1,17 @@
 <template>
   <div class="root">
-    <a-button type="primary" @click="handleExtractChampion">抽取资源</a-button>
+    <a-space direction="vertical">
+      <a-button type="primary" @click="handleExtractChampion"
+        >抽取champion资源</a-button
+      >
+      <a-button type="primary" @click="handleExtractItem"
+        >抽取item资源</a-button
+      >
+    </a-space>
   </div>
 </template>
 <script setup lang="ts">
 /** ================提取champion资源================= */
-
 async function handleExtractChampion() {
   const modules = import.meta.glob("@/assets/zh_CN/champion/*.json");
   const championList = [];
@@ -24,13 +30,35 @@ async function handleExtractChampion() {
   console.log("iconMapList:", iconMapList);
 }
 function parseChampionData(name, data, list) {
-  // 被动信息
-  if (data.passive.image.full !== `${name}P.png`) {
+  // 收集iconMap
+  const passive = [
+    {
+      id: `${name}P`,
+      name: data.passive.name,
+      icon: `${name}P.png`,
+      description: data.passive.description,
+    },
+  ];
+  list.push({
+    source: data.passive.image.full,
+    target: `${name}P.png`,
+  });
+  const spells = data.spells.map((i, index) => {
+    const suffixList = ["Q", "W", "E", "R"];
+    if (i.id !== `${name}${suffixList[index]}`) {
+      i.id = `${name}${suffixList[index]}`;
+    }
     list.push({
-      source: data.passive.image.full,
-      target: `${name}P.png`,
+      source: i.image.full,
+      target: `${i.id}.png`,
     });
-  }
+    return {
+      id: i.id,
+      name: i.name,
+      icon: `${i.id}.png`,
+      description: i.tooltip,
+    };
+  });
   return {
     [name]: {
       type: "champion",
@@ -44,33 +72,7 @@ function parseChampionData(name, data, list) {
           skin: `${name}_${i.num}.jpg`,
         };
       }),
-      spells: [
-        {
-          id: `${name}P`,
-          name: data.passive.name,
-          icon: `${name}P.png`,
-          description: data.passive.description,
-        },
-      ].concat(
-        data.spells.map((i, index) => {
-          const array = ["Q", "W", "E", "R"];
-          if (i.id !== `${name}${array[index]}`) {
-            i.id = `${name}${array[index]}`;
-          }
-          if (i.image.full !== `${i.id}.png`) {
-            list.push({
-              source: i.image.full,
-              target: `${i.id}.png`,
-            });
-          }
-          return {
-            id: i.id,
-            name: i.name,
-            icon: `${i.id}.png`,
-            description: i.tooltip,
-          };
-        })
-      ),
+      spells: [...passive, ...spells],
       effects: {
         [`${name}P`]: null,
         [`${name}Q`]: null,
@@ -80,6 +82,26 @@ function parseChampionData(name, data, list) {
       },
     },
   };
+}
+
+/** ================提取item资源================= */
+async function handleExtractItem() {
+  const json = await new Promise((resolve) => {
+    import(`../../assets/zh_CN/item.json`).then((module) => {
+      resolve(module.data);
+    });
+  });
+  const list = [];
+  Object.entries(json).forEach(([key, value]) => {
+    list.push({
+      id: key,
+      name: value.name,
+      icon: value.image.full,
+      plaintext: value.plaintext,
+      description: value.description,
+    });
+  });
+  console.log(list);
 }
 
 // 写入文件脚本

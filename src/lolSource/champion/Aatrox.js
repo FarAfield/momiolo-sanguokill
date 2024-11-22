@@ -63,7 +63,7 @@ function importModule() {
       {
         id: "AatroxP",
         name: "赐死剑气",
-        icon: "Aatrox_Passive.png",
+        icon: "AatroxP.png",
         description: "亚托克斯的下一次攻击附加1点伤害",
       },
       {

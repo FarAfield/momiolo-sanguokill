@@ -103,8 +103,8 @@ function getRuneImage(runeName) {
   return new URL(`../assets/images/rune/${name}.png`, import.meta.url).href;
 }
 function getSkinImage(skinName) {
-  const name = skinName.replace(".png", "");
-  return new URL(`../assets/images/avatar/${name}.png`, import.meta.url).href;
+  const name = skinName.replace(".jpg", "");
+  return new URL(`../assets/images/skin/${name}.jpg`, import.meta.url).href;
 }
 function getSpellImage(spellName) {
   const name = spellName.replace(".png", "");

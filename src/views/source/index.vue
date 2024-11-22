@@ -30,9 +30,7 @@ import {
 } from "@/core/utils";
 import championTab from "./component/championTab.vue";
 
-// avatar  128*128
-// skin 380*380
-// equip rune spell  64*64
+// equip rune  64*64
 // background 1136*640(暂定，未使用)
 
 const library = ref({
@@ -40,7 +38,7 @@ const library = ref({
   equipment: [],
   talentRune: [],
 });
-const activeKey = ref("champion");
+const activeKey = ref("equipment");
 onMounted(() => {
   boot();
 });
@@ -71,7 +69,7 @@ const tabList = [
     key: "equipment",
   },
   {
-    title: "天赋符文",
+    title: "符文",
     key: "talentRune",
   },
 ];
