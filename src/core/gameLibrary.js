@@ -9,7 +9,8 @@ class GameLibrary extends UnInstantiated {
   static heroList = [];
   static cardList = [];
   static effectMap = {};
-  // 实际游戏资源
+  // 游戏运行配置
+  static runtimeConfig = {};
 }
 
 export default GameLibrary;

@@ -7,10 +7,11 @@
       <a-button type="primary" @click="handleExtractItem"
         >抽取item资源</a-button
       >
+      <a-button type="primary" @click="handleExtract">抽取其他资源</a-button>
     </a-space>
   </div>
 </template>
-<script setup lang="ts">
+<script setup>
 /** ================提取champion资源================= */
 async function handleExtractChampion() {
   const modules = import.meta.glob("@/assets/zh_CN/champion/*.json");
@@ -98,6 +99,28 @@ async function handleExtractItem() {
       name: value.name,
       icon: value.image.full,
       plaintext: value.plaintext,
+      description: value.description,
+    });
+  });
+  console.log(list);
+  console.log(
+    list.filter((i) => ["鞋", "靴", "胫甲"].some((j) => i.name.includes(j)))
+  );
+}
+
+/** ================提取summoner资源================= */
+async function handleExtract() {
+  const json = await new Promise((resolve) => {
+    import(`../../assets/zh_CN/summoner.json`).then((module) => {
+      resolve(module.data);
+    });
+  });
+  const list = [];
+  Object.entries(json).forEach(([key, value]) => {
+    list.push({
+      id: key,
+      name: value.name,
+      icon: value.image.full,
       description: value.description,
     });
   });

@@ -17,21 +17,11 @@
     </div>
   </div>
 </template>
-<script setup lang="tsx">
+<script setup lang="jsx">
 import { ref, onMounted, defineComponent } from "vue";
-import {
-  dynamicImportModule,
-  getAvatarImage,
-  getBackgroundImage,
-  getEquipImage,
-  getRuneImage,
-  getSkinImage,
-  getSpellImage,
-} from "@/core/utils";
-import championTab from "./component/championTab.vue";
-
-// equip rune  64*64
-// background 1136*640(暂定，未使用)
+import { dynamicImportModule } from "@/core/utils";
+import ChampionTab from "./component/championTab.vue";
+import GroupingTab from "./component/groupingTab.vue";
 
 const library = ref({
   champion: [],
@@ -55,22 +45,23 @@ async function boot() {
       library.value[packageName] = library.value[packageName].concat(module);
     }
   }
-  console.log(library.value);
 }
 
 const tabList = [
   {
     title: "英雄",
     key: "champion",
-    render: championTab,
+    render: ChampionTab,
   },
   {
     title: "装备",
     key: "equipment",
+    render: <GroupingTab group="equipment" />,
   },
   {
     title: "符文",
     key: "talentRune",
+    render: <GroupingTab group="talentRune" />,
   },
 ];
 </script>
