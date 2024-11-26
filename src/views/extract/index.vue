@@ -103,28 +103,47 @@ async function handleExtractItem() {
     });
   });
   console.log(list);
+  const needList = [];
   console.log(
     list.filter((i) => ["鞋", "靴", "胫甲"].some((j) => i.name.includes(j)))
   );
+  // boot  3006  3009  3020 3047  3111 3117  3158
+  console.log(
+    list.filter((i) =>
+      ["甲", "袍", "铠", "盾", "纱", "冕"].some((j) => i.name.includes(j))
+    )
+  );
+  //
 }
 
-/** ================提取summoner资源================= */
+/** ================提取资源================= */
 async function handleExtract() {
   const json = await new Promise((resolve) => {
-    import(`../../assets/zh_CN/summoner.json`).then((module) => {
-      resolve(module.data);
+    import(`../../assets/zh_CN/runesReforged.json`).then((module) => {
+      resolve(module.default);
     });
   });
-  const list = [];
-  Object.entries(json).forEach(([key, value]) => {
-    list.push({
-      id: key,
-      name: value.name,
-      icon: value.image.full,
-      description: value.description,
-    });
+  const tree = json.map((item) => {
+    return {
+      id: item.id,
+      key: item.key,
+      name: item.name,
+      icon: item.icon,
+      children: item.slots.reduce((pre, cur) => {
+        pre.push(
+          ...cur.runes.map((i) => ({
+            id: i.id,
+            key: i.key,
+            name: i.name,
+            icon: i.icon,
+            description: i.shortDesc,
+          }))
+        );
+        return pre;
+      }, []),
+    };
   });
-  console.log(list);
+  console.log(tree);
 }
 
 // 写入文件脚本
