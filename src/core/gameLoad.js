@@ -18,7 +18,7 @@ async function onLoad() {
     Object.assign(_library.effectMap, i.effects);
     _library.heroList.push(hero);
   }
-  // 把装备和符文转换为卡牌
+  // 对装备和符文进行提取
   for (const i of equipment) {
     const card = omit(cloneDeep(i), ["effects"]);
     Object.assign(_library.effectMap, i.effects);
@@ -32,6 +32,7 @@ async function onLoad() {
     _library.cardList.push(card);
   }
   gameLog("【资源加载完成】");
+  // 启动游戏
   _game.start();
 }
 

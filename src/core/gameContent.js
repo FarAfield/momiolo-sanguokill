@@ -1,5 +1,5 @@
 const GameContent = {
-  game: function ({ event, game, get, ui }) {
+  game: function ({ event, game, get, set, ui }) {
     function step1() {
       // 创建玩家
       ui.createPlayer();
@@ -19,33 +19,44 @@ const GameContent = {
     function step4() {
       event.trigger("gamePhaseLoop");
     }
+    function step5() {
+      game.over();
+    }
     return {
       step1,
       step2,
       step3,
       step4,
+      step5,
     };
   },
-  chooseHero: function ({ event, game, get }) {
+  chooseHero: function ({ event, game, get, set, ui }) {
     async function step1() {
-      const playerList = get.gamePlayerList();
-      const me = get.gameMe();
-      const heroList = get.heroList();
+      const [playerList, me, heroList] = [
+        get.playerList(),
+        get.me(),
+        get.heroList(),
+      ];
       game.log(`你处于【${me.playerSeatNum}】号位`);
-      // 当前玩家优先选
+      // 当前玩家优先选择
       await game.delay(3000);
       me.chooseHero(heroList[get.random(0, heroList.length - 1)]);
       game.log(`【你选择了${me.playerTitle}: ${me.playerName}】`);
-      // 剩余的继续选
-      const otherPlayerList = playerList.filter(
-        (i) => i.playerSeatNum !== me.playerSeatNum
-      );
-      for (let i = 0; i < otherPlayerList.length; i++) {
+      // 其他玩家轮流选
+      for (let i = 0; i < playerList.length; i++) {
+        // 跳过当前玩家
+        if (playerList[i].playerSeatNum === me.playerSeatNum) {
+          continue;
+        }
         await game.delay(3000);
-        const hero = heroList[get.random(0, heroList.length - 1)];
-        otherPlayerList[i].chooseHero(hero);
+        // 不重复选择
+        const restHeroList = heroList.filter(
+          (i) => !playerList.map((p) => p.playerId).includes(i.id)
+        );
+        const hero = restHeroList[get.random(0, restHeroList.length - 1)];
+        playerList[i].chooseHero(hero);
         game.log(
-          `【${otherPlayerList[i].playerSeatNum}号位选择了${otherPlayerList[i].playerTitle}: ${otherPlayerList[i].playerName}】`
+          `【${playerList[i].playerSeatNum}号位选择了${playerList[i].playerTitle}: ${playerList[i].playerName}】`
         );
       }
       event.finish();
@@ -54,7 +65,7 @@ const GameContent = {
       step1,
     };
   },
-  gameStart: function ({ event }) {
+  gameStart: function ({ event, game, get, set, ui }) {
     async function step1() {
       event.finish();
     }
@@ -62,10 +73,9 @@ const GameContent = {
       step1,
     };
   },
-  gameDraw: function ({ event, game, get }) {
+  gameDraw: function ({ event, game, get, set, ui }) {
     async function step1() {
-      const playerList = get.gamePlayerList();
-      const cardPile = get.gameCardPile();
+      const [playerList, cardPile] = [get.playerList(), get.cardPile()];
       for (let i = 0; i < playerList.length; i++) {
         await game.delay(3000);
         playerList[i].handCards = cardPile.splice(0, 2);
@@ -80,22 +90,48 @@ const GameContent = {
       step1,
     };
   },
-  gamePhaseLoop: function ({ event, get }) {
+  gamePhaseLoop: function ({ event, game, get, set, ui }) {
     async function step1() {
-      get.gameRound(get.gameRound() + 1);
-      if (get.gameRound() > 3) {
-        game.over();
-      } else {
-        await game.delay(3000);
-        console.log("gamePhaseLoop  done", `第${get.gameRound()}轮`);
-        event.goto(1);
+      let [round, playerList, current] = [
+        get.round(),
+        get.playerList(),
+        get.current(),
+      ];
+      // current为空，默认为第一个玩家
+      if (!current.playerId) {
+        set.current(playerList[0]);
+        current = get.current();
       }
+      // playerSeatNum = 0 轮次+1
+      const playerSeatNum = current.playerSeatNum;
+      if (playerSeatNum === 0) {
+        set.round(round + 1);
+        round = get.round();
+        game.log(`第【${round}】轮`);
+      }
+      if (round > 3) {
+        game.over();
+        return;
+      }
+      await game.delay(3000);
+      game.log(`【${current.playerName}】的回合开始`);
+      // todo die跳过
+      event.trigger("phase");
+    }
+    async function step2() {
+      const [playerList, current] = [get.playerList(), get.current()];
+      const playerSeatNum = current.playerSeatNum;
+      const nextSeatNum =
+        playerSeatNum + 1 >= playerList.length ? 0 : playerSeatNum + 1;
+      set.current(playerList[nextSeatNum]);
+      event.goto(1);
     }
     return {
       step1,
+      step2,
     };
   },
-  phase: function ({ event, get, game }) {
+  phase: function ({ event, game, get, set, ui }) {
     function step1() {
       event.trigger("phasePre");
     }
@@ -114,6 +150,14 @@ const GameContent = {
     function step6() {
       event.trigger("phasePost");
     }
+    return {
+      step1,
+      step2,
+      step3,
+      step4,
+      step5,
+      step6,
+    };
   },
 };
 

@@ -10,9 +10,10 @@ const GameStatus = {
   ai: {},
   event: null,
   history: [],
-  playerList: [],
   cardPile: [],
+  playerList: [],
   me: {},
+  current: {},
 };
 // 通过Proxy劫持status的变更来更新视图
 function deepProxy(obj, syncObj) {

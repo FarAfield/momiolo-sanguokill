@@ -1,7 +1,7 @@
 import GameAi from "@/core/gameAi";
 import GameContent from "@/core/gameContent";
 import GameEvent from "@/core/gameEvent";
-import GameGet from "@/core/gameGet";
+import { GameGet, GameSet } from "@/core/gameGetSet";
 import GameLibrary from "@/core/gameLibrary";
 import GameStatus from "@/core/gameStatus";
 import GameUi from "@/core/gameUi";
@@ -12,6 +12,7 @@ const _ai = GameAi;
 const _content = GameContent;
 const _event = GameEvent;
 const _get = GameGet;
+const _set = GameSet;
 const _library = GameLibrary;
 const _status = GameStatus;
 const _ui = GameUi;
@@ -112,9 +113,10 @@ class GameEngine extends UnInstantiated {
         event.setContent(_game.transformEventFunction(event));
       }
       // 执行content时入参必须保证与new Function参数一致
-      await event.content(event, _game, _get, _ui).catch((err) => {
+      await event.content(event, _game, _get, _set, _ui).catch((err) => {
         gameLog(`【${event.eventName}】执行出错`);
         console.error(err);
+        _game.over();
       });
       resolve();
     });
@@ -127,7 +129,7 @@ class GameEngine extends UnInstantiated {
     if (!fn) {
       return new AsyncFunction("event", "event.finish();return;");
     } else {
-      fnMap = fn({}); // 规范化参数，实际{ event, game:_game }
+      fnMap = fn({}); // 规范化参数
       fnKeyList = Object.keys(fnMap).sort(
         (a, b) => Number(a.replace("step", "")) - Number(b.replace("step", ""))
       );
@@ -139,11 +141,11 @@ class GameEngine extends UnInstantiated {
           functionBody.indexOf("{") + 1,
           functionBody.lastIndexOf("}")
         );
-        str += `case ${index}:${functionBody}break;`;
+        str += `case ${index}:{${functionBody}break;}`;
       });
       str += "}";
       // 构造函数时的入参必须保证与执行时一致
-      return new AsyncFunction("event", "game", "get", "ui", str);
+      return new AsyncFunction("event", "game", "get", "set", "ui", str);
     }
   }
 }
