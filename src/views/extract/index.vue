@@ -92,28 +92,31 @@ async function handleExtractItem() {
       resolve(module.data);
     });
   });
+  const json_en = await new Promise((resolve) => {
+    import(`../../assets/en_US/item.json`).then((module) => {
+      resolve(module.data);
+    });
+  });
   const list = [];
   Object.entries(json).forEach(([key, value]) => {
     list.push({
       id: key,
-      name: value.name,
+      name: json_en[key].name.replace(/\s/g, ""),
+      cnName: value.name,
       icon: value.image.full,
       plaintext: value.plaintext,
       description: value.description,
     });
   });
   console.log(list);
-  const needList = [];
-  console.log(
-    list.filter((i) => ["鞋", "靴", "胫甲"].some((j) => i.name.includes(j)))
-  );
-  // boot  3006  3009  3020 3047  3111 3117  3158
-  console.log(
-    list.filter((i) =>
-      ["甲", "袍", "铠", "盾", "纱", "冕"].some((j) => i.name.includes(j))
-    )
-  );
-  //
+  const result = list.map((i) => {
+    return {
+      source: i.icon,
+      target: i.name + ".png",
+      mapName: i.cnName,
+    };
+  });
+  console.log(result);
 }
 
 /** ================提取资源================= */
@@ -123,26 +126,31 @@ async function handleExtract() {
       resolve(module.default);
     });
   });
-  const tree = json.map((item) => {
-    return {
-      id: item.id,
-      key: item.key,
-      name: item.name,
-      icon: item.icon,
-      children: item.slots.reduce((pre, cur) => {
-        pre.push(
-          ...cur.runes.map((i) => ({
-            id: i.id,
-            key: i.key,
-            name: i.name,
-            icon: i.icon,
-            description: i.shortDesc,
-          }))
-        );
-        return pre;
-      }, []),
-    };
-  });
+  const tree = json
+    .map((item) => {
+      return {
+        id: item.id,
+        key: item.key,
+        name: item.name,
+        icon: item.icon,
+        children: item.slots.reduce((pre, cur) => {
+          pre.push(
+            ...cur.runes.map((i) => ({
+              id: i.id,
+              key: i.key,
+              name: i.name,
+              icon: i.icon.split("/").at(-1),
+              description: i.shortDesc,
+            }))
+          );
+          return pre;
+        }, []),
+      };
+    })
+    .reduce((pre, cur) => {
+      pre.push(...cur.children);
+      return pre;
+    }, []);
   console.log(tree);
 }
 
