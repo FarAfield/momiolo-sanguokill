@@ -151,7 +151,29 @@ async function handleExtract() {
       pre.push(...cur.children);
       return pre;
     }, []);
-  console.log(tree);
+  const modules = import.meta.glob("@/assets/images/rune/*.png");
+  const keys = Object.keys(modules)
+    .map((i) => i.split("/").at(-1))
+    .filter((i) => !i.includes("Summoner"));
+  console.log(keys);
+  const result = tree.filter((i) => keys.includes(i.icon));
+  console.log(
+    result,
+    keys.filter((i) => !result.map((r) => r.icon).includes(i))
+  );
+  const r = result.map((i) => {
+    return {
+      type: "rune",
+      id: i.key,
+      name: i.name,
+      image: i.icon,
+      description: i.description,
+      effects: {
+        [i.key]: null,
+      },
+    };
+  });
+  console.log(r);
 }
 
 // 写入文件脚本

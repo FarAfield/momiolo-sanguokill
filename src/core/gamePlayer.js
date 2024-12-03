@@ -1,3 +1,8 @@
+import GameStatus from "@/core/gameStatus";
+import { gameLog } from "@/core/utils";
+
+const _status = GameStatus;
+
 class Player {
   // 基础属性
   playerId;
@@ -35,6 +40,14 @@ class Player {
     this.playerAvatar = hero.avatar;
     this.playerSkin = hero.skins[0].skin;
     this.skills = hero.spells;
+  }
+
+  drawCard(num = 0) {
+    const cardPile = _status.cardPile;
+    const cards = cardPile.splice(0, num);
+    gameLog(
+      `玩家【${this.playerName}】获得了【${num}】张牌：${cards.map((i) => i.cardName).join(", ")}`
+    );
   }
 }
 export default Player;
