@@ -1,25 +1,29 @@
 import GameAi from "@/core/gameAi";
+import GameCard from "@/core/gameCard";
 import GameContent from "@/core/gameContent";
 import GameEvent from "@/core/gameEvent";
-import { GameGet, GameSet } from "@/core/gameGetSet";
+import GameGetSet from "@/core/gameGetSet";
 import GameLibrary from "@/core/gameLibrary";
+import GameLog from "@/core/gameLog";
+import GamePlayer from "@/core/gamePlayer";
 import GameStatus from "@/core/gameStatus";
 import GameUi from "@/core/gameUi";
-import { AsyncFunction, UnInstantiated, gameLog, delay } from "@/core/utils";
+import { AsyncFunction, UnInstantiated, delay } from "@/core/utils";
 import { pick, cloneDeep } from "lodash-es";
 
 const _ai = GameAi;
 const _content = GameContent;
 const _event = GameEvent;
-const _get = GameGet;
-const _set = GameSet;
+const _get = GameGetSet.get;
+const _set = GameGetSet.set;
 const _library = GameLibrary;
+const _log = GameLog;
 const _status = GameStatus;
 const _ui = GameUi;
 
 class GameEngine extends UnInstantiated {
   static start() {
-    gameLog("【游戏开始】");
+    _log.info("【游戏开始】");
     // 初始化事件
     _status.event = _event.initGameEvent();
     // 触发游戏事件
@@ -28,17 +32,17 @@ class GameEngine extends UnInstantiated {
     _game.loop();
   }
   static over() {
-    gameLog("【游戏结束】");
+    _log.info("【游戏结束】");
     _status.over = true;
   }
 
   static pause() {
-    gameLog("【游戏暂停】");
+    _log.warn("【游戏暂停】");
     _status.pause = true;
   }
 
   static resume() {
-    gameLog("【游戏恢复】");
+    _log.warn("【游戏恢复】");
     _status.pause = false;
     _game.loop();
   }
@@ -53,7 +57,30 @@ class GameEngine extends UnInstantiated {
   }
 
   static log() {
-    gameLog(...arguments);
+    let str = "";
+    function transformClassObject(v) {
+      if (v instanceof GameCard) {
+        return v.cardName;
+      } else if (v instanceof GamePlayer) {
+        return v.playerName;
+      } else if (v instanceof GameEvent) {
+        return v.eventName;
+      } else {
+        return JSON.stringify(v);
+      }
+    }
+    Array.from(arguments).forEach((value) => {
+      if (typeof value === "object") {
+        if (Array.isArray(value)) {
+          str += `【${value.map(transformClassObject).join(",")}】`;
+        } else {
+          str += `【${transformClassObject(value)}】`;
+        }
+      } else if (typeof value === "string") {
+        str += value;
+      }
+    });
+    _log.log(str);
   }
 
   // 事件循环
@@ -83,7 +110,7 @@ class GameEngine extends UnInstantiated {
           event.parent.subResult[`${event.eventId}-status`] = "done";
           event.parent.subResult[`${event.eventId}-result`] = event.result;
           event.finish();
-          gameLog(`【${event.eventName}】执行完成`);
+          _library.debug && _log.log(`【${event.eventName}】执行完成`);
           _status.event = event.parent;
         } else {
           event.finish();
@@ -114,7 +141,7 @@ class GameEngine extends UnInstantiated {
       }
       // 执行content时入参必须保证与new Function参数一致
       await event.content(event, _game, _get, _set, _ui).catch((err) => {
-        gameLog(`【${event.eventName}】执行出错`);
+        _log.error(`【${event.eventName}】执行异常`);
         console.error(err);
         _game.over();
       });

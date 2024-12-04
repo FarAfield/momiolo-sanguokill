@@ -1,6 +1,10 @@
 import GameEventPromise from "@/core/gameEventPromise";
-import { createSeedRadom, gameLog } from "@/core/utils";
+import GameLibrary from "@/core/gameLibrary";
+import GameLog from "@/core/gameLog";
+import { createSeedRadom } from "@/core/utils";
 
+const _library = GameLibrary;
+const _log = GameLog;
 const radom = createSeedRadom(1000); // 创建种子
 
 class GameEvent {
@@ -67,7 +71,7 @@ class GameEvent {
     if (name === "gameStart") {
       // 广播游戏开始
     }
-    gameLog(`【${name}】创建`);
+    _library.debug && _log.log(`【${name}】创建`);
     const needTimingEventName = ["gameDraw", "gamePhaseLoop"]; // todo
     return this.insertNext(name, needTimingEventName.includes(name));
   }

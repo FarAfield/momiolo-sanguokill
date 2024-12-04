@@ -46,7 +46,7 @@
 <script setup>
 import { ref, computed, toRefs, watch } from "vue";
 import { useGameStore } from "@/store";
-import { onBoot } from "@/core/gameBoot";
+import GameBoot from "@/core/gameBoot";
 import { getHeroSkin } from "@/utils";
 import { cloneDeep } from "lodash-es";
 
@@ -111,7 +111,7 @@ function getSkinStyle(player) {
     : {};
 }
 function handleStart() {
-  onBoot();
+  GameBoot.onBoot();
 }
 </script>
 <style lang="scss" scoped>

@@ -39,24 +39,23 @@ const GameContent = {
       ];
       game.log(`你处于【${me.playerSeatNum}】号位`);
       // 当前玩家优先选择
-      await game.delay(3000);
+      await game.delay();
       me.chooseHero(heroList[get.random(0, heroList.length - 1)]);
-      game.log(`【你选择了${me.playerTitle}: ${me.playerName}】`);
+      game.log(`你选择了【${me.playerTitle}: ${me.playerName}】`);
       // 其他玩家轮流选
-      for (let i = 0; i < playerList.length; i++) {
+      for (const player of playerList) {
         // 跳过当前玩家
-        if (playerList[i].playerSeatNum === me.playerSeatNum) {
+        if (player.playerSeatNum === me.playerSeatNum) {
           continue;
         }
-        await game.delay(3000);
+        await game.delay();
         // 不重复选择
         const restHeroList = heroList.filter(
           (i) => !playerList.map((p) => p.playerId).includes(i.id)
         );
-        const hero = restHeroList[get.random(0, restHeroList.length - 1)];
-        playerList[i].chooseHero(hero);
+        player.chooseHero(restHeroList[get.random(0, restHeroList.length - 1)]);
         game.log(
-          `【${playerList[i].playerSeatNum}号位选择了${playerList[i].playerTitle}: ${playerList[i].playerName}】`
+          `${player.playerSeatNum}号位选择了【${player.playerTitle}: ${player.playerName}】`
         );
       }
       event.finish();
@@ -75,14 +74,10 @@ const GameContent = {
   },
   gameDraw: function ({ event, game, get, set, ui }) {
     async function step1() {
-      const [playerList, cardPile] = [get.playerList(), get.cardPile()];
-      for (let i = 0; i < playerList.length; i++) {
-        await game.delay(3000);
-        playerList[i].handCards = cardPile.splice(0, 2);
-        const cardNames = playerList[i].handCards
-          .map((i) => i.cardName)
-          .join(",");
-        game.log(`玩家【${playerList[i].playerName}】获得两张牌:${cardNames}`);
+      const playerList = get.playerList();
+      for (const player of playerList) {
+        await game.delay();
+        player.drawCard(2);
       }
       event.finish();
     }
@@ -113,8 +108,8 @@ const GameContent = {
         game.over();
         return;
       }
-      await game.delay(3000);
-      game.log(`【${current.playerName}】的回合开始`);
+      await game.delay();
+      game.log(current, "回合开始");
       // todo die跳过
       event.trigger("phase");
     }

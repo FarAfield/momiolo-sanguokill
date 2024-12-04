@@ -13,7 +13,7 @@ import GameEvent from "./gameEvent";
 import GameStatus from "./gameStatus";
 import GameAi from "./gameAi";
 import GameLibrary from "./gameLibrary";
-import { onBoot } from "./gameBoot";
+import GameBoot from "./gameBoot";
 
 /** =========================测试utils============================== */
 
@@ -53,7 +53,7 @@ function testGameEvent() {
 function testCardOrHero() {}
 
 async function testMain() {
-  await onBoot();
+  await GameBoot.onBoot();
 }
 
 export { testMain };

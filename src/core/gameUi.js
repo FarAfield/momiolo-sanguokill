@@ -1,8 +1,8 @@
-import { UnInstantiated, getRandomNumber } from "@/core/utils";
 import GameLibrary from "@/core/gameLibrary";
 import GameStatus from "@/core/gameStatus";
 import GamePlayer from "@/core/gamePlayer";
 import GameCard from "@/core/gameCard";
+import { UnInstantiated, getRandomNumber } from "@/core/utils";
 
 const _library = GameLibrary;
 const _status = GameStatus;

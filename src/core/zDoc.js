@@ -87,3 +87,12 @@
 // 4.全局随机buff、自身选取buff
 // 5.普通卡、普通buff卡  回血、扣血、回能、偷取装备、跳过回合、禁用回合
 // 6.装备卡，最多6   3输出2防御1鞋子配卡   armor / boot  /  sword  /  bow 弓  /  staff 杖
+
+// ai =>
+// boot => load
+// load => engine
+// engine => all
+// event =>
+// getSet =>
+// player =>  ???
+// ui => card、player

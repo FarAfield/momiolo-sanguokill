@@ -1,6 +1,7 @@
+import GameLog from "@/core/gameLog";
 import GameStatus from "@/core/gameStatus";
-import { gameLog } from "@/core/utils";
 
+const _log = GameLog;
 const _status = GameStatus;
 
 class Player {
@@ -45,9 +46,9 @@ class Player {
   drawCard(num = 0) {
     const cardPile = _status.cardPile;
     const cards = cardPile.splice(0, num);
-    gameLog(
-      `玩家【${this.playerName}】获得了【${num}】张牌：${cards.map((i) => i.cardName).join(", ")}`
-    );
+    this.handCards = this.handCards.concat(cards);
+    console.log(`获得了【${num}】张牌:`);
+    // _log.log(this, `获得了【${num}】张牌:`, cards);
   }
 }
 export default Player;

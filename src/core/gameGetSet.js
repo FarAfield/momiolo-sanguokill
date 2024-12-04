@@ -55,4 +55,9 @@ class GameSet extends UnInstantiated {
   }
 }
 
-export { GameGet, GameSet };
+class GameGetSet extends UnInstantiated {
+  static get = GameGet;
+  static set = GameSet;
+}
+
+export default GameGetSet;
