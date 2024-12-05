@@ -47,8 +47,15 @@ class Player {
     const cardPile = _status.cardPile;
     const cards = cardPile.splice(0, num);
     this.handCards = this.handCards.concat(cards);
-    console.log(`获得了【${num}】张牌:`);
-    // _log.log(this, `获得了【${num}】张牌:`, cards);
+    _log.log(
+      this.playerName,
+      `获得了【${num}】张牌:`,
+      cards.map((i) => i.cardName).join(",")
+    );
+  }
+
+  isDie() {
+    return this.playerHp <= 0;
   }
 }
 export default Player;

@@ -10,8 +10,11 @@ class GameLibrary extends UnInstantiated {
   static cardList = [];
   static effectMap = {};
   // 游戏运行配置
-  static debug = true;
-  static runtimeConfig = {};
+  static debug = false;
+  static runtimeConfig = {
+    initCardNum: 2,
+    phaseCardNum: 1,
+  };
 }
 
 export default GameLibrary;

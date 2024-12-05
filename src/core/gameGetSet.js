@@ -34,6 +34,14 @@ class GameGet extends UnInstantiated {
     return _library.heroList;
   }
 
+  static initCardNum() {
+    return _library.runtimeConfig.initCardNum;
+  }
+
+  static phaseCardNum() {
+    return _library.runtimeConfig.phaseCardNum;
+  }
+
   static random(min = 0, max = 100) {
     return getRandomNumber(min, max);
   }

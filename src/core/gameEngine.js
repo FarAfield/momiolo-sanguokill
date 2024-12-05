@@ -83,6 +83,10 @@ class GameEngine extends UnInstantiated {
     _log.log(str);
   }
 
+  static debug() {
+    _log.debug(...arguments);
+  }
+
   // 事件循环
   static async loop() {
     while (true) {

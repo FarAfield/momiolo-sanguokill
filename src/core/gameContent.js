@@ -74,10 +74,10 @@ const GameContent = {
   },
   gameDraw: function ({ event, game, get, set, ui }) {
     async function step1() {
-      const playerList = get.playerList();
+      const [playerList, initCardNum] = [get.playerList(), get.initCardNum()];
       for (const player of playerList) {
         await game.delay();
-        player.drawCard(2);
+        player.drawCard(initCardNum);
       }
       event.finish();
     }
@@ -109,9 +109,10 @@ const GameContent = {
         return;
       }
       await game.delay();
-      game.log(current, "回合开始");
-      // todo die跳过
-      event.trigger("phase");
+      if (!current.isDie()) {
+        game.log(current, "回合开始");
+        event.trigger("phase");
+      }
     }
     async function step2() {
       const [playerList, current] = [get.playerList(), get.current()];
@@ -152,6 +153,17 @@ const GameContent = {
       step4,
       step5,
       step6,
+    };
+  },
+  phaseDraw: function ({ event, game, get, set, ui }) {
+    async function step1() {
+      const [current, phaseCardNum] = [get.current(), get.phaseCardNum()];
+      await game.delay();
+      current.drawCard(phaseCardNum);
+      event.finish();
+    }
+    return {
+      step1,
     };
   },
 };
