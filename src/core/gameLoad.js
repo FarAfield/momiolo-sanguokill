@@ -1,12 +1,14 @@
 import GameEngine from "@/core/gameEngine";
 import GameLibrary from "@/core/gameLibrary";
 import GameLog from "@/core/gameLog";
+import GameTest from "@/core/gameTest";
 import { UnInstantiated } from "@/core/utils";
 import { cloneDeep, omit } from "lodash-es";
 
 const _game = GameEngine;
 const _library = GameLibrary;
 const _log = GameLog;
+const _test = GameTest;
 
 class GameLoad extends UnInstantiated {
   static async onLoad() {
@@ -35,6 +37,8 @@ class GameLoad extends UnInstantiated {
       _library.cardList.push(card);
     }
     _log.success("【资源加载完成】");
+    // 测试模式启动
+    await _test.start();
     // 启动游戏
     _game.start();
   }

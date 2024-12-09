@@ -1,3 +1,4 @@
+import GameTest from "@/core/gameTest";
 const GameContent = {
   game: function ({ event, game, get, set, ui }) {
     function step1() {
@@ -189,5 +190,4 @@ const GameContent = {
     };
   },
 };
-
-export default GameContent;
+export default Object.assign({}, GameContent, GameTest.content);
