@@ -166,6 +166,28 @@ const GameContent = {
       step1,
     };
   },
+  phaseUse: function ({ event, game, get, set, ui }) {
+    async function step1() {
+      const [current] = [get.current()];
+      game.log(current, "进入了出牌阶段");
+      // 根据触发时机过滤出能使用的法术以及卡牌
+      //  event.result =  chooseToUse
+      // 第二步，为true,goto(1)
+      event.finish();
+    }
+    return {
+      step1,
+    };
+  },
+  chooseToUse: function ({ event, game, get, set, ui }) {
+    async function step1() {
+      // player.useResult
+      // useCard  /  useSpell
+    }
+    return {
+      step1,
+    };
+  },
 };
 
 export default GameContent;

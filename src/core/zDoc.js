@@ -98,3 +98,10 @@
 // player =>
 // card =>
 // ui => card、player
+
+// useCardPhase    chooseToUse    chooseCard/chooseTarget
+// this.useCard(result.used, result.cards, result.targets, result.skill)    useCardToPlayer  useCardToTarget
+// this.useSkill(result.skill, result.cards, result.targets)
+// card/skill content
+// player.damage
+// player.changeHp

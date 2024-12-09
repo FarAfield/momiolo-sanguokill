@@ -11,7 +11,7 @@ class Player {
   playerName;
   playerAvatar;
   playerSkin;
-  skills = [];
+  spells = [];
   // 其他属性
   playerSeatNum = 0; // 位次
   playerMaxHp = 0;
@@ -19,7 +19,7 @@ class Player {
   playerMaxPow = 0;
   playerPow = 0;
   // 额外属性
-  tempSkills = []; // 临时技能
+  tempSpells = []; // 临时技能
   actionHistory = []; // 操作记录
   marks = {}; // 标记
   ai = {}; // ai逻辑
@@ -40,9 +40,11 @@ class Player {
     this.playerName = hero.name;
     this.playerAvatar = hero.avatar;
     this.playerSkin = hero.skins[0].skin;
-    this.skills = hero.spells;
+    this.spells = hero.spells;
   }
-
+  isDie() {
+    return this.playerHp <= 0;
+  }
   drawCard(num = 0) {
     const cardPile = _status.cardPile;
     const cards = cardPile.splice(0, num);
@@ -52,10 +54,6 @@ class Player {
       `获得了【${num}】张牌:`,
       cards.map((i) => i.cardName).join(",")
     );
-  }
-
-  isDie() {
-    return this.playerHp <= 0;
   }
 }
 export default Player;

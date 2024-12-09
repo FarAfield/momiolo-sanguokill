@@ -34,6 +34,10 @@ class GameGet extends UnInstantiated {
     return _library.heroList;
   }
 
+  static effectMap() {
+    return _library.effectMap;
+  }
+
   static initCardNum() {
     return _library.runtimeConfig.initCardNum;
   }
