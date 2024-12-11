@@ -60,9 +60,9 @@ class GameEngine extends UnInstantiated {
     let str = "";
     function transformClassObject(v) {
       if (v instanceof GameCard) {
-        return v.cardName;
+        return v.name;
       } else if (v instanceof GamePlayer) {
-        return v.playerName;
+        return v.name;
       } else if (v instanceof GameEvent) {
         return v.eventName;
       } else {
@@ -144,7 +144,7 @@ class GameEngine extends UnInstantiated {
         event.setContent(_game.transformEventFunction(event));
       }
       // 执行content时入参必须保证与new Function参数一致
-      await event.content(event, _game, _get, _set, _ui).catch((err) => {
+      await event.content(event, _game, _get, _set, _ui, _ai).catch((err) => {
         _log.error(`【${event.eventName}】执行异常`);
         console.error(err);
         _game.over();
@@ -176,7 +176,7 @@ class GameEngine extends UnInstantiated {
       });
       str += "}";
       // 构造函数时的入参必须保证与执行时一致
-      return new AsyncFunction("event", "game", "get", "set", "ui", str);
+      return new AsyncFunction("event", "game", "get", "set", "ui", "ai", str);
     }
   }
 }

@@ -11,12 +11,10 @@ const _status = GameStatus;
 const IS_TEST = true;
 
 const gameTestConfig = {
-  playerList: ["Aatrox", "Ahri", "Akali"],
-  cardMap: {
-    SummonerFlash: 20,
-  },
+  playerList: ["Aatrox", "Ahri"],
+  cardList: ["Virtual"],
+  cardNum: 100,
 };
-
 class GameTest extends UnInstantiated {
   static start() {
     if (IS_TEST) {
@@ -26,28 +24,55 @@ class GameTest extends UnInstantiated {
         gameTestConfig.playerList.includes(i.id)
       );
       _library.cardList = _library.cardList.filter((i) =>
-        Object.keys(gameTestConfig.cardMap).includes(i.id)
+        gameTestConfig.cardList.includes(i.id)
       );
-      _library.runtimeConfig.initCardTimes.spell = 100; // 卡牌数量
+      Object.keys(_library.runtimeConfig.cardTimes).forEach((key) => {
+        _library.runtimeConfig.cardTimes[key] = gameTestConfig.cardNum;
+      });
     }
   }
   static content = IS_TEST
     ? {
         chooseHero: function ({ event, game, get, set, ui }) {
           async function step1() {
-            const [playerList, heroList, cardPile] = [
-              get.playerList(),
-              get.heroList(),
-            ];
+            const [playerList, heroList] = [get.playerList(), get.heroList()];
             for (const player of playerList) {
               await game.delay();
-              player.chooseHero(heroList[player.playerSeatNum]);
+              player.chooseHero(heroList[player.seatNum]);
               game.log(
-                `${player.playerSeatNum}号位选择了【${player.playerTitle}: ${player.playerName}】`
+                `${player.seatNum}号位选择了【${player.title}: ${player.name}】`
               );
             }
             event.finish();
           }
+          return {
+            step1,
+          };
+        },
+        phaseUse: function ({ event, game, get, set, ui, ai }) {
+          async function step1() {
+            const [playerList, current] = [get.playerList(), get.current()];
+            game.log(current, "进入了出牌阶段");
+            console.log(current.handCards, current.spells);
+            // 根据触发时机过滤出能使用的法术以及卡牌
+            //  event.result =  chooseToUse
+            // 第二步，为true,goto(1)
+            event.finish();
+          }
+
+          function step2() {
+            if (event.result) {
+              event.goto(1);
+            } else {
+              event.finish();
+            }
+          }
+          return {
+            step1,
+          };
+        },
+        chooseToUse() {
+          async function step1() {}
           return {
             step1,
           };

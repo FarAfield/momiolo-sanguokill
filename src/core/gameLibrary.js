@@ -13,14 +13,15 @@ class GameLibrary extends UnInstantiated {
   static debug = false; // 事件信息debug
   static runtimeConfig = {
     playerNum: 2,
-    initPlayerHp: 100,
-    initPlayerPow: 8,
-    initCardTimes: {
+    playerHp: 100,
+    playerPow: 8,
+    cardTimes: {
       sword: 1,
       spell: 1,
       rune: 1,
+      virtual: 1,
     },
-    initCardNum: 2,
+    drawCardNum: 2,
     phaseCardNum: 1,
   };
 }

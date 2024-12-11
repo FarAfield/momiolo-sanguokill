@@ -9,14 +9,14 @@ const _status = GameStatus;
 
 class GameUi extends UnInstantiated {
   static createPlayer() {
-    const { playerNum, initPlayerHp, initPlayerPow } = _library.runtimeConfig;
+    const { playerNum, playerHp, playerPow } = _library.runtimeConfig;
     _status.playerList = Array.from({ length: playerNum }, (_, i) => {
       return new GamePlayer({
-        playerSeatNum: i,
-        playerMaxHp: initPlayerHp,
-        playerHp: initPlayerHp,
-        playerMaxPow: initPlayerPow,
-        playerPow: initPlayerPow,
+        seatNum: i,
+        maxHp: playerHp,
+        hp: playerHp,
+        maxPow: playerPow,
+        pow: playerPow,
       });
     });
     const meIndex = getRandomNumber(0, playerNum - 1);
@@ -25,27 +25,20 @@ class GameUi extends UnInstantiated {
 
   static createCard() {
     const cardList = _library.cardList;
-    const initCardTimes = _library.runtimeConfig.initCardTimes;
-    const { sword, spell, rune } = initCardTimes;
+    const cardTimes = _library.runtimeConfig.cardTimes;
+    Object.keys(cardTimes).forEach((key) => {
+      _status.cardPile.push(
+        ...repeatArray(
+          cardList.filter((i) => i.type === key),
+          cardTimes[key]
+        )
+      );
+    });
     function repeatArray(arr, n) {
       return Array(n)
         .fill(arr)
         .flatMap((x) => x);
     }
-    _status.cardPile = [
-      ...repeatArray(
-        cardList.filter((i) => i.type === "sword"),
-        sword
-      ),
-      ...repeatArray(
-        cardList.filter((i) => i.type === "spell"),
-        spell
-      ),
-      ...repeatArray(
-        cardList.filter((i) => i.type === "rune"),
-        rune
-      ),
-    ].map((i) => new GameCard(i));
   }
 }
 

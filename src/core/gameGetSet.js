@@ -38,8 +38,8 @@ class GameGet extends UnInstantiated {
     return _library.effectMap;
   }
 
-  static initCardNum() {
-    return _library.runtimeConfig.initCardNum;
+  static drawCardNum() {
+    return _library.runtimeConfig.drawCardNum;
   }
 
   static phaseCardNum() {

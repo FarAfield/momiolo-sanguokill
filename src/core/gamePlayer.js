@@ -6,27 +6,32 @@ const _status = GameStatus;
 
 class Player {
   // 基础属性
-  playerId;
-  playerTitle;
-  playerName;
-  playerAvatar;
-  playerSkin;
+  type;
+  id;
+  title;
+  name;
+  avatar;
+  skin;
   spells = [];
-  // 其他属性
-  playerSeatNum = 0; // 位次
-  playerMaxHp = 0;
-  playerHp = 0;
-  playerMaxPow = 0;
-  playerPow = 0;
-  // 额外属性
-  tempSpells = []; // 临时技能
-  actionHistory = []; // 操作记录
-  marks = {}; // 标记
-  ai = {}; // ai逻辑
+  // 游戏属性
+  seatNum = 0;
+  maxHp = 0;
+  hp = 0;
+  maxPow = 0;
+  pow = 0;
   judgeCards = [];
   buffCards = [];
   handCards = [];
   equipCards = [];
+  // 额外属性
+  ai = {
+    friend: [],
+    enemy: [],
+    neutral: [],
+  };
+  tempSpells = [];
+  marks = {};
+  actionHistory = [];
 
   constructor(player) {
     Object.keys(player).forEach((key) => {
@@ -35,11 +40,12 @@ class Player {
   }
 
   chooseHero(hero) {
-    this.playerId = hero.id;
-    this.playerTitle = hero.title;
-    this.playerName = hero.name;
-    this.playerAvatar = hero.avatar;
-    this.playerSkin = hero.skins[0].skin;
+    this.type = hero.type;
+    this.id = hero.id;
+    this.title = hero.title;
+    this.name = hero.name;
+    this.avatar = hero.avatar;
+    this.skin = hero.skins[0].skin;
     this.spells = hero.spells;
   }
   isDie() {
@@ -50,9 +56,9 @@ class Player {
     const cards = cardPile.splice(0, num);
     this.handCards = this.handCards.concat(cards);
     _log.log(
-      this.playerName,
+      this.name,
       `获得了【${num}】张牌:`,
-      cards.map((i) => i.cardName).join(",")
+      cards.map((i) => i.name).join(",")
     );
   }
 }

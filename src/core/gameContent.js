@@ -38,25 +38,25 @@ const GameContent = {
         get.me(),
         get.heroList(),
       ];
-      game.log(`你处于【${me.playerSeatNum}】号位`);
+      game.log(`你处于【${me.seatNum}】号位`);
       // 当前玩家优先选择
       await game.delay();
       me.chooseHero(heroList[get.random(0, heroList.length - 1)]);
-      game.log(`你选择了【${me.playerTitle}: ${me.playerName}】`);
+      game.log(`你选择了【${me.title}: ${me.name}】`);
       // 其他玩家轮流选
       for (const player of playerList) {
         // 跳过当前玩家
-        if (player.playerSeatNum === me.playerSeatNum) {
+        if (player.seatNum === me.seatNum) {
           continue;
         }
         await game.delay();
         // 不重复选择
         const restHeroList = heroList.filter(
-          (i) => !playerList.map((p) => p.playerId).includes(i.id)
+          (i) => !playerList.map((p) => p.id).includes(i.id)
         );
         player.chooseHero(restHeroList[get.random(0, restHeroList.length - 1)]);
         game.log(
-          `${player.playerSeatNum}号位选择了【${player.playerTitle}: ${player.playerName}】`
+          `${player.seatNum}号位选择了【${player.title}: ${player.name}】`
         );
       }
       event.finish();
@@ -75,10 +75,10 @@ const GameContent = {
   },
   gameDraw: function ({ event, game, get, set, ui }) {
     async function step1() {
-      const [playerList, initCardNum] = [get.playerList(), get.initCardNum()];
+      const [playerList, drawCardNum] = [get.playerList(), get.drawCardNum()];
       for (const player of playerList) {
         await game.delay();
-        player.drawCard(initCardNum);
+        player.drawCard(drawCardNum);
       }
       event.finish();
     }
@@ -94,13 +94,13 @@ const GameContent = {
         get.current(),
       ];
       // current为空，默认为第一个玩家
-      if (!current.playerId) {
+      if (!current.id) {
         set.current(playerList[0]);
         current = get.current();
       }
-      // playerSeatNum = 0 轮次+1
-      const playerSeatNum = current.playerSeatNum;
-      if (playerSeatNum === 0) {
+      // seatNum = 0 轮次+1
+      const seatNum = current.seatNum;
+      if (seatNum === 0) {
         set.round(round + 1);
         round = get.round();
         game.log(`第【${round}】轮`);
@@ -117,9 +117,8 @@ const GameContent = {
     }
     async function step2() {
       const [playerList, current] = [get.playerList(), get.current()];
-      const playerSeatNum = current.playerSeatNum;
-      const nextSeatNum =
-        playerSeatNum + 1 >= playerList.length ? 0 : playerSeatNum + 1;
+      const seatNum = current.seatNum;
+      const nextSeatNum = seatNum + 1 >= playerList.length ? 0 : seatNum + 1;
       set.current(playerList[nextSeatNum]);
       event.goto(1);
     }
