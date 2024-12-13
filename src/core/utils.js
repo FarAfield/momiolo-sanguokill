@@ -9,7 +9,7 @@ function isGeneratorFunction(fn) {
   return typeof fn === "function" && fn instanceof GeneratorFunction;
 }
 // 延时函数，参数毫秒
-function delay(ms = 1000) {
+function delay(ms = 100) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 

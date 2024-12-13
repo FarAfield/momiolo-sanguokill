@@ -14,11 +14,13 @@ const gameTestConfig = {
   playerList: ["Aatrox", "Ahri"],
   cardList: ["Virtual"],
   cardNum: 100,
+  round: 2,
 };
 class GameTest extends UnInstantiated {
   static start() {
     if (IS_TEST) {
       _log.warn("启动游戏测试模式");
+      _library.runtimeConfig.maxRound = gameTestConfig.round;
       _library.runtimeConfig.playerNum = gameTestConfig.playerList.length;
       _library.heroList = _library.heroList.filter((i) =>
         gameTestConfig.playerList.includes(i.id)
@@ -55,6 +57,8 @@ class GameTest extends UnInstantiated {
             game.log(current, "进入了出牌阶段");
             console.log(current.handCards, current.spells);
             // 根据触发时机过滤出能使用的法术以及卡牌
+            const weight = ai.chooseCard(current.handCards);
+            console.log(weight);
             //  event.result =  chooseToUse
             // 第二步，为true,goto(1)
             event.finish();

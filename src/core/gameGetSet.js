@@ -38,6 +38,10 @@ class GameGet extends UnInstantiated {
     return _library.effectMap;
   }
 
+  static maxRound() {
+    return _library.runtimeConfig.maxRound;
+  }
+
   static drawCardNum() {
     return _library.runtimeConfig.drawCardNum;
   }

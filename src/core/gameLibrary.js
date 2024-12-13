@@ -12,6 +12,8 @@ class GameLibrary extends UnInstantiated {
   // 游戏运行配置
   static debug = false; // 事件信息debug
   static runtimeConfig = {
+    seed: 1000,
+    maxRound: 4,
     playerNum: 2,
     playerHp: 100,
     playerPow: 8,

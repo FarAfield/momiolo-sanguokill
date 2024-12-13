@@ -1,91 +1,142 @@
 import GameEventPromise from "@/core/gameEventPromise";
 import GameLibrary from "@/core/gameLibrary";
 import GameLog from "@/core/gameLog";
+import GameStatus from "@/core/gameStatus";
 import { createSeedRadom } from "@/core/utils";
 
 const _library = GameLibrary;
 const _log = GameLog;
-const radom = createSeedRadom(1000); // 创建种子
+const _status = GameStatus;
+const radom = createSeedRadom(_library.runtimeConfig.seed);
 
 class GameEvent {
   #promise;
-  constructor(name) {
-    // base attrs
-    this.eventId = radom();
-    this.eventName = name;
+  constructor(name, aop = true) {
+    // 基础属性
+    this.id = radom();
+    this.name = name;
     this.isFinish = false;
     this.resolve = null;
     this.reject = null;
-    // event attrs
+    // 事件属性
     this.parent = undefined;
     this.next = [];
     this.after = [];
     this.content = undefined;
-    this.result = {}; // 当前事件执行结果
-    this.subResult = {}; // 子事件执行结果  `${eventId}-status`   `${eventId}-result`
-    this.step = 0; // 事件执行步骤
-    this.timing = undefined; // 事件执行时机(依次添加before/begin/end/after)
-    // other attrs
+    this.result = {};
+    this.subResult = {};
+    this.step = 0;
+    this.timing = aop ? 0 : undefined; // 事件执行时机(依次添加before/begin/end/after)
+    // 游戏属性
     this.player = {};
     this.source = {};
     this.target = {};
     this.targets = [];
     this.card = {};
     this.cards = [];
-    this.skill = "";
+    this.spell = undefined;
     this.forced = false;
+    this.real = false;
+    this.noTrigger = false;
     this.baseDamage = 0;
+    this.extraDamage = 0;
   }
 
-  // 初始化事件
-  static initGameEvent() {
-    return new GameEvent().toPromise();
-  }
-
-  // 完成事件
-  finish() {
-    this.isFinish = true;
-    this.resolve?.();
-    return this;
-  }
-  // 跳转到指定步骤
-  goto(step) {
-    this.step = step - 2;
-    return this;
-  }
-  setContent(content) {
-    this.content = content;
-    return this;
-  }
-  // todo
-  getParent(level, keyword) {}
-
-  // 生成Promise
+  /** ================================  基础属性方法  ================================ */
   toPromise() {
     !this.#promise && (this.#promise = new GameEventPromise(this));
     return this.#promise;
   }
 
-  // 触发新事件
-  trigger(name) {
-    if (name === "gameStart") {
-      // 广播游戏开始
-    }
-    _library.debug && _log.log(`【${name}】创建`);
-    const needTimingEventName = ["gameDraw", "gamePhaseLoop"]; // todo
-    return this.insertNext(name, needTimingEventName.includes(name));
+  static createEvent(name, aop, triggerEvent) {
+    const next = new GameEvent(name, aop).toPromise();
+    (triggerEvent || _status.event).next.push(next);
+    return next;
   }
-  insertNext(name, needTiming = false) {
-    const next = new GameEvent(name);
-    needTiming && (next.timing = 0);
+
+  static initGameEvent() {
+    return new GameEvent().finish().toPromise();
+  }
+  finish() {
+    this.isFinish = true;
+    this.resolve?.();
+    return this;
+  }
+  /** ================================  事件属性方法  ================================ */
+
+  getParent(keyword) {
+    let event = this;
+    if (typeof keyword === "string") {
+      const historyList = [];
+      while (true) {
+        if (!event) {
+          return null;
+        }
+        historyList.push(event);
+        if (event.name === keyword) {
+          return event;
+        }
+        event = event.parent;
+        if (historyList.includes(event)) {
+          return null;
+        }
+      }
+    } else if (typeof keyword === "number") {
+      for (let i = 1; i < level; i++) {
+        if (!event) {
+          return null;
+        }
+        event = event.parent;
+      }
+      return event;
+    }
+  }
+  insertNext(name, aop) {
+    _library.debug && _log.log(`insertNext 【${name}】`);
+    const next = new GameEvent(name, aop).toPromise();
     this.next.push(next);
     return next;
   }
-  insertAfter(name, needTiming = false) {
-    const after = new GameEvent(name);
-    needTiming && (after.timing = 0);
+  insertAfter(name, aop) {
+    _library.debug && _log.log(`insertAfter 【${name}】`);
+    const after = new GameEvent(name, aop).toPromise();
     this.after.push(after);
     return after;
+  }
+
+  goto(step) {
+    this.step = step - 1;
+    return this;
+  }
+
+  redo() {
+    this.step -= 1;
+    return this;
+  }
+
+  /** ================================  游戏属性方法  ================================ */
+
+  increase(key, value = 1) {
+    if (typeof this[key] !== "number" || typeof value !== "number") {
+      _log.error(`【${this.name}】increase 错误`);
+      return;
+    }
+    this[key] += value;
+  }
+
+  decrease(key, value = 1) {
+    if (typeof this[key] !== "number" || typeof value !== "number") {
+      _log.error(`【${this.name}】decrease 错误`);
+      return;
+    }
+    this[key] = Math.max(this[key] - value, 0);
+  }
+
+  trigger(name, aop) {
+    _library.debug && _log.log(`【${name}】创建`);
+    const next = new GameEvent(name, aop).toPromise();
+    this.next.push(next);
+    return next;
   }
 }
 export default GameEvent;

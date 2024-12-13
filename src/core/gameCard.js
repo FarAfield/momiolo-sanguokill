@@ -1,4 +1,8 @@
-import { merge } from "lodash-es";
+import GameLog from "@/core/gameLog";
+import GameStatus from "@/core/gameStatus";
+
+const _log = GameLog;
+const _status = GameStatus;
 
 class Card {
   package;
@@ -8,6 +12,9 @@ class Card {
   name;
   image;
   description;
+  // 是否是虚拟牌
+  isVirtual = false;
+  // 卡牌属性以及AI
   attrs = {
     // 费用
     cost: 0,
@@ -46,15 +53,9 @@ class Card {
       useful: 0,
     },
   };
-  // 额外属性
-  isVirtual = false;
   constructor(card) {
     Object.keys(card).forEach((key) => {
-      if (typeof card[key] === "object") {
-        this[key] = merge({}, this[key], card[key]);
-      } else {
-        this[key] = card[key];
-      }
+      this[key] = card[key];
     });
   }
 }

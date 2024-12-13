@@ -88,10 +88,11 @@ const GameContent = {
   },
   gamePhaseLoop: function ({ event, game, get, set, ui }) {
     async function step1() {
-      let [round, playerList, current] = [
+      let [round, current, playerList, maxRound] = [
         get.round(),
-        get.playerList(),
         get.current(),
+        get.playerList(),
+        get.maxRound(),
       ];
       // current为空，默认为第一个玩家
       if (!current.id) {
@@ -105,7 +106,7 @@ const GameContent = {
         round = get.round();
         game.log(`第【${round}】轮`);
       }
-      if (round > 3) {
+      if (round >= maxRound) {
         game.over();
         return;
       }
