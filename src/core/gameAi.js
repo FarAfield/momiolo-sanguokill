@@ -1,3 +1,4 @@
+import GameCard from "@/core/gameCard";
 import GameLibrary from "@/core/gameLibrary";
 import GameStatus from "@/core/gameStatus";
 import { UnInstantiated } from "@/core/utils";
@@ -8,7 +9,17 @@ const _status = GameStatus;
 
 // 所有AI可选值范围[-10,10]
 class GameAi extends UnInstantiated {
-  static chooseToUse(cardList) {
+  static chooseToUse(cardList, spellList) {
+    const virtualCardList = spellList.map((spell) => {
+      return new GameCard({ ...spell, isVirtual: true });
+    });
+    function findMaxIndexes(array, n) {
+      return array
+        .map((item, index) => ({ item, index }))
+        .sort((a, b) => b.item - a.item)
+        .slice(0, n)
+        .map(({ index }) => index);
+    }
     function calcWeight(card) {
       const result = {
         disabled: false,
@@ -87,27 +98,33 @@ class GameAi extends UnInstantiated {
         }
       });
       // 计算该卡的总权重
-      function findMaxIndexes(array, n) {
-        return array
-          .map((item, index) => ({ item, index }))
-          .sort((a, b) => b.item - a.item)
-          .slice(0, n)
-          .map(({ index }) => index);
-      }
       const indexes = findMaxIndexes(weightList, targetNum);
       result.targets = targets.filter((_, index) => indexes.includes(index));
       result.totalWeight = weightList
         .filter((_, index) => indexes.includes(index))
         .reduce((a, b) => a + b, 0);
-      //   totalWeight / cost  ???  todo
+      result.totalWeight = Math.round(result.totalWeight / (cost || 1));
       return result;
     }
-    return cardList.map((card) => {
+    const weightResultList = cardList.concat(virtualCardList).map((card) => {
       const effectMap = _library.effectMap;
       const effect = effectMap[card.id];
-      console.log("cardWeight", calcWeight(Object.assign({}, card, effect)));
-      return calcWeight(Object.assign({}, card, effect));
+      const weight = calcWeight(Object.assign({}, card, effect));
+      // console.log(`【${card.name}】`, weight.totalWeight, weight);
+      return weight;
     });
+    const [bestIndex] = findMaxIndexes(
+      weightResultList.map((i) => i.totalWeight),
+      1
+    );
+    const bestCard = cardList.concat(virtualCardList)[bestIndex];
+    const bestTargets = weightResultList[bestIndex].targets;
+    const disabledCard = weightResultList.filter((i) => i.disabled);
+    return {
+      card: bestCard,
+      targets: bestTargets,
+      disabledCard,
+    };
   }
 }
 

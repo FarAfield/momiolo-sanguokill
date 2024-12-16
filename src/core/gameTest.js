@@ -12,7 +12,7 @@ const IS_TEST = true;
 
 const gameTestConfig = {
   playerList: ["Aatrox", "Ahri"],
-  cardList: ["Virtual"],
+  cardList: ["Attack", "Recover"],
   cardNum: 100,
   round: 2,
 };
@@ -55,13 +55,15 @@ class GameTest extends UnInstantiated {
           async function step1() {
             const [playerList, current] = [get.playerList(), get.current()];
             game.log(current, "进入了出牌阶段");
-            console.log(
-              JSON.parse(JSON.stringify(current.handCards)),
+            // 根据触发时机过滤出能使用的法术以及卡牌
+            const { card, targets, disabledCard } = ai.chooseToUse(
+              current.handCards,
               current.spells
             );
-            // 根据触发时机过滤出能使用的法术以及卡牌
-            const weight = ai.chooseToUse(current.handCards);
-            // console.log(weight);
+            console.log(
+              `【${current.name}】对${targets.map((i) => i.name).join(",")}使用了${card.isVirtual ? "法术" : "卡牌"}【${card.name}】`
+            );
+            console.log(disabledCard);
             //  event.result =  chooseToUse
             // 第二步，为true,goto(1)
             event.finish();

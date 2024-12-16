@@ -98,11 +98,32 @@ function importModule() {
       },
     ],
     effects: {
-      AatroxP: (event, game, get, ui) => {},
-      AatroxQ: (event, game, get, ui) => {},
-      AatroxW: (event, game, get, ui) => {},
-      AatroxE: (event, game, get, ui) => {},
-      AatroxR: (event, game, get, ui) => {},
+      AatroxP: {},
+      AatroxQ: {
+        cost: 2,
+        attrs: {
+          enable: true,
+          toSelf: false,
+          selectTarget: true,
+          allowMultiple: false,
+          multipleNum: 0,
+        },
+        ai: {
+          basic: {
+            order: 1,
+            value: 1,
+            addedValue: 0,
+          },
+          choose: {
+            player: 0,
+            target: 10,
+          },
+        },
+        content: () => {},
+      },
+      AatroxW: {},
+      AatroxE: {},
+      AatroxR: {},
     },
   };
 }

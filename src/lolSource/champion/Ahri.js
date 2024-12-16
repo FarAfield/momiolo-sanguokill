@@ -65,11 +65,11 @@ function importModule() {
       },
     ],
     effects: {
-      AhriP: null,
-      AhriQ: null,
-      AhriW: null,
-      AhriE: null,
-      AhriR: null,
+      AhriP: {},
+      AhriQ: {},
+      AhriW: {},
+      AhriE: {},
+      AhriR: {},
     },
   };
 }
