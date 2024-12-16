@@ -31,7 +31,7 @@ class GameUi extends UnInstantiated {
         ...repeatArray(
           cardList.filter((i) => i.type === key),
           cardTimes[key]
-        )
+        ).map((i) => new GameCard(i))
       );
     });
     function repeatArray(arr, n) {

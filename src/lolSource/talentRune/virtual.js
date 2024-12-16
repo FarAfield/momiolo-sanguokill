@@ -6,31 +6,28 @@ function importModule() {
       name: "虚无",
       image: "Virtual.png",
       description: "虚无,造成一点伤害",
+      cost: 1,
       effects: {
         Virtual: {
           attrs: {
-            cost: 1,
-            toSelf: false,
             enable: true,
+            toSelf: true,
+            selectTarget: true,
             allowMultiple: true,
+            multipleNum: 2,
           },
           ai: {
             basic: {
-              order: 2,
-              value: 0,
+              order: 1,
+              value: 1,
               addedValue: 0,
             },
-            result: {
-              player: 0,
-              target: 0,
-            },
-            tag: {
-              damage: 1,
-              recover: 0,
-              multiple: 2,
-              useful: 0,
+            choose: {
+              player: 1,
+              target: 4,
             },
           },
+          content: () => {},
         },
       },
     },

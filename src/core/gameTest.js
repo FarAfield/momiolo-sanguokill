@@ -55,9 +55,12 @@ class GameTest extends UnInstantiated {
           async function step1() {
             const [playerList, current] = [get.playerList(), get.current()];
             game.log(current, "进入了出牌阶段");
-            console.log(current.handCards, current.spells);
+            console.log(
+              JSON.parse(JSON.stringify(current.handCards)),
+              current.spells
+            );
             // 根据触发时机过滤出能使用的法术以及卡牌
-            // const weight = ai.chooseCard(current.handCards);
+            const weight = ai.chooseToUse(current.handCards);
             // console.log(weight);
             //  event.result =  chooseToUse
             // 第二步，为true,goto(1)

@@ -12,45 +12,36 @@ class Card {
   name;
   image;
   description;
+  cost = 0;
   // 是否是虚拟牌
   isVirtual = false;
   // 卡牌属性以及AI
   attrs = {
-    // 费用
-    cost: 0,
-    // 是否能对自身使用
-    toSelf: false,
-    // 是否可使用
+    // 是否可使用 (card,player) => boolean
     enable: true,
-    // 能否选择目标
+    // 是否能对自身使用 (card,player) => boolean
+    toSelf: false,
+    // 能否选择目标 (card,player,target) => boolean
     selectTarget: true,
-    // 是否可多选目标
-    allowMultiple: false, // (card,player,target) => boolean
+    // 是否可多选目标 (card,player) => boolean
+    allowMultiple: false,
+    // 多选目标数量  (card,player) => number
+    multipleNum: 0,
   };
   ai = {
     basic: {
-      // 优先级
+      // 优先级 (card,player,target) => number
       order: 0,
-      // 基础值
+      // 基础值 (card,player,target) => number
       value: 0,
-      // 附加值
+      // 附加值 (card,player,target) => number
       addedValue: 0,
     },
-    result: {
-      // 对玩家使用优先级
+    choose: {
+      // 对玩家使用优先级  (card,player) => number
       player: 0,
-      // 对目标使用优先级
+      // 对目标使用优先级  (card,target) => number
       target: 0,
-    },
-    tag: {
-      // 伤害
-      damage: 0,
-      // 恢复
-      recover: 0,
-      // 多选
-      multiple: 0,
-      // 其他功能性
-      useful: 0,
     },
   };
   constructor(card) {
