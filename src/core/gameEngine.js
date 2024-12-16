@@ -23,26 +23,26 @@ const _ui = GameUi;
 
 class GameEngine extends UnInstantiated {
   static start() {
-    _log.info("【游戏开始】");
+    _log.info("System", "游戏开始");
     // 初始化事件
-    _status.event = _event.initGameEvent();
+    _status.event = GameEvent.initGameEvent();
     // 触发游戏事件
     _status.event.trigger("game");
     // 开启事件循环
     _game.loop();
   }
   static over() {
-    _log.info("【游戏结束】");
+    _log.success("System", "游戏结束");
     _status.over = true;
   }
 
   static pause() {
-    _log.warn("【游戏暂停】");
+    _log.warning("System", "游戏暂停");
     _status.pause = true;
   }
 
   static resume() {
-    _log.warn("【游戏恢复】");
+    _log.warning("System", "游戏恢复");
     _status.pause = false;
     _game.loop();
   }
@@ -64,7 +64,7 @@ class GameEngine extends UnInstantiated {
       } else if (v instanceof GamePlayer) {
         return v.name;
       } else if (v instanceof GameEvent) {
-        return v.eventName;
+        return v.name;
       } else {
         return JSON.stringify(v);
       }
@@ -101,20 +101,20 @@ class GameEngine extends UnInstantiated {
         _status.event = next;
       } else if (event.isFinish) {
         if (event.timing === 2) {
-          event.trigger(`${event.eventName}End`);
+          event.trigger(`${event.name}End`);
           event.timing += 1;
         } else if (event.timing === 3) {
-          event.trigger(`${event.eventName}After`);
+          event.trigger(`${event.name}After`);
           event.timing += 1;
         } else if (event.after.length) {
           const after = event.after.shift();
           after.parent = event;
           _status.event = after;
         } else if (event.parent) {
-          event.parent.subResult[`${event.eventId}-status`] = "done";
-          event.parent.subResult[`${event.eventId}-result`] = event.result;
+          event.parent.subResult[`${event.id}-status`] = "done";
+          event.parent.subResult[`${event.id}-result`] = event.result;
           event.finish();
-          _library.debug && _log.log(`【${event.eventName}】执行完成`);
+          _library.debug && _log.log(`【${event.name}】执行完成`);
           _status.event = event.parent;
         } else {
           event.finish();
@@ -124,10 +124,10 @@ class GameEngine extends UnInstantiated {
           event.finish();
         }
         if (event.timing === 0) {
-          event.trigger(`${event.eventName}Before`);
+          event.trigger(`${event.name}Before`);
           event.timing += 1;
         } else if (event.timing === 1) {
-          event.trigger(`${event.eventName}Begin`);
+          event.trigger(`${event.name}Begin`);
           event.timing += 1;
         } else {
           await _game.runContent(event).then(() => {
@@ -145,7 +145,7 @@ class GameEngine extends UnInstantiated {
       }
       // 执行content时入参必须保证与new Function参数一致
       await event.content(event, _game, _get, _set, _ui, _ai).catch((err) => {
-        _log.error(`【${event.eventName}】执行异常`);
+        _log.error(`【${event.name}】执行异常`);
         console.error(err);
         _game.over();
       });
@@ -156,7 +156,7 @@ class GameEngine extends UnInstantiated {
   static transformEventFunction(event) {
     let fnMap = {};
     let fnKeyList = [];
-    const fn = _content[event.eventName];
+    const fn = _content[event.name];
     if (!fn) {
       return new AsyncFunction("event", "event.finish();return;");
     } else {
@@ -183,7 +183,7 @@ class GameEngine extends UnInstantiated {
 
 function logEventPromise(event) {
   function logEvent(e) {
-    const result = pick(e, ["eventName", "isFinish", "content", "step"]);
+    const result = pick(e, ["name", "isFinish", "content", "step"]);
     e.next && (result.next = e.next.map(logEvent));
     e.after && (result.after = e.after.map(logEvent));
     e.parent && (result.parent = logEvent(e.parent));

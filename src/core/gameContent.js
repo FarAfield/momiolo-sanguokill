@@ -9,16 +9,16 @@ const GameContent = {
       // 洗牌
       game.washCard();
       // 选择英雄
-      event.trigger("chooseHero");
+      event.trigger("chooseHero", true);
     }
     function step2() {
-      event.trigger("gameStart");
+      event.trigger("gameStart", true);
     }
     function step3() {
-      event.trigger("gameDraw");
+      event.trigger("gameDraw", true);
     }
     function step4() {
-      event.trigger("gamePhaseLoop");
+      event.trigger("gamePhaseLoop", true);
     }
     function step5() {
       game.over();

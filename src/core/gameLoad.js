@@ -12,7 +12,7 @@ const _test = GameTest;
 
 class GameLoad extends UnInstantiated {
   static async onLoad() {
-    _log.info("【资源加载中...】");
+    _log.info("System", "资源加载中...");
     // 解析资源
     const champion = _library.champion;
     const equipment = _library.equipment;
@@ -36,7 +36,7 @@ class GameLoad extends UnInstantiated {
       card.package = "talentRune";
       _library.cardList.push(card);
     }
-    _log.success("【资源加载完成】");
+    _log.success("System", "资源加载完成");
     // 测试模式启动
     await _test.start();
     // 启动游戏

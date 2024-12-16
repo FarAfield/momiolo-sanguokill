@@ -1,37 +1,48 @@
 const LogConfig = {
-  log: {
-    level: 0,
-    color: "",
-  },
   debug: {
     level: 1,
-    color: "#168cff",
+    color: "#2d8cf0",
   },
   info: {
     level: 2,
-    color: "#86909c",
+    color: "#909399",
   },
-  warn: {
+  warning: {
     level: 3,
-    color: "#E6A23C",
+    color: "#ff9900",
   },
   success: {
     level: 3,
-    color: "#67C23A",
+    color: "#19be6b",
   },
   error: {
     level: 4,
-    color: "#ff0000",
+    color: "#f03f14",
   },
 };
-function prettyPrint(title, text, color) {
-  if (!color) {
-    console.log(text);
-  } else {
+
+function prettyPrint() {
+  if (arguments.length === 2) {
+    const [text, color] = Array.from(arguments);
+    console.log(
+      `%c ${text} `,
+      `background:${color}; padding: 2px; border-radius: 4px;color: #fff;`
+    );
+  } else if (arguments.length === 3) {
+    const [title, text, color] = Array.from(arguments);
     console.log(
       `%c ${title} %c ${text} %c`,
-      `background:${color};border:1px solid ${color}; padding: 1px; border-radius: 2px 0 0 2px; color: #fff;`,
-      `border:1px solid ${color}; padding: 1px; border-radius: 0 2px 2px 0; color: ${color};`,
+      `background:${color};border:1px solid ${color}; padding: 1px; border-radius: 4px 0 0 4px; color: #fff;`,
+      `border:1px solid ${color}; padding: 1px; border-radius: 0 4px 4px 0; color: ${color};`,
+      "background:transparent"
+    );
+  } else {
+    const args = Array.from(arguments);
+    const color = args.at(-1);
+    const str = args.slice(0, args.length - 1).join("");
+    console.log(
+      `%c ${str} %c`,
+      `border:1px solid ${color}; padding: 1px; border-radius:4px; color: ${color};`,
       "background:transparent"
     );
   }
@@ -39,81 +50,32 @@ function prettyPrint(title, text, color) {
 class GameLog {
   /**  level 0  */
   static log(...args) {
-    if (logLevel > LogConfig.log.level) {
-      return;
-    }
-    if (args.length === 2) {
-      prettyPrint(args[0], args[1], LogConfig.log.color);
-    } else {
-      prettyPrint("log", args.join(""), LogConfig.log.color);
-    }
+    console.log(...args);
   }
 
   /**  level 1  */
   static debug(...args) {
-    if (logLevel > LogConfig.debug.level) {
-      return;
-    }
-    if (args.length === 2) {
-      prettyPrint(args[0], args[1], LogConfig.debug.color);
-    } else {
-      prettyPrint("Debug", args.join(""), LogConfig.debug.color);
-    }
+    prettyPrint(...args, LogConfig.debug.color);
   }
 
   /**  level 2  */
   static info(...args) {
-    if (logLevel > LogConfig.info.level) {
-      return;
-    }
-    if (args.length === 2) {
-      prettyPrint(args[0], args[1], LogConfig.info.color);
-    } else {
-      prettyPrint("Info", args.join(""), LogConfig.info.color);
-    }
+    prettyPrint(...args, LogConfig.info.color);
   }
 
   /**  level 3  */
-  static warn(...args) {
-    if (logLevel > LogConfig.warn.level) {
-      return;
-    }
-    if (args.length === 2) {
-      prettyPrint(args[0], args[1], LogConfig.warn.color);
-    } else {
-      prettyPrint("Warn", args.join(""), LogConfig.warn.color);
-    }
+  static warning(...args) {
+    prettyPrint(...args, LogConfig.warning.color);
   }
 
   /**  level 3  */
   static success(...args) {
-    if (logLevel > LogConfig.success.level) {
-      return;
-    }
-    if (args.length === 2) {
-      prettyPrint(args[0], args[1], LogConfig.success.color);
-    } else {
-      prettyPrint("Success", args.join(""), LogConfig.success.color);
-    }
+    prettyPrint(...args, LogConfig.success.color);
   }
 
   /**  level 4  */
   static error(...args) {
-    if (logLevel > LogConfig.error.level) {
-      return;
-    }
-    if (args.length === 2) {
-      prettyPrint(args[0], args[1], LogConfig.error.color);
-    } else {
-      prettyPrint("Error", args.join(""), LogConfig.error.color);
-    }
-  }
-
-  /**  level Infinity  */
-  static prettyLog(title, text, color) {
-    prettyPrint(title, text, color);
+    prettyPrint(...args, LogConfig.error.color);
   }
 }
 export default GameLog;
-
-const logLevel = 0;

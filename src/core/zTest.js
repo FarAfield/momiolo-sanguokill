@@ -14,6 +14,7 @@ import GameStatus from "./gameStatus";
 import GameAi from "./gameAi";
 import GameLibrary from "./gameLibrary";
 import GameBoot from "./gameBoot";
+import GameLog from "./gameLog";
 
 /** =========================测试utils============================== */
 

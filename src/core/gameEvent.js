@@ -11,7 +11,7 @@ const radom = createSeedRadom(_library.runtimeConfig.seed);
 
 class GameEvent {
   #promise;
-  constructor(name, aop = true) {
+  constructor(name, aop = false) {
     // 基础属性
     this.id = radom();
     this.name = name;
@@ -104,13 +104,12 @@ class GameEvent {
     return after;
   }
 
-  goto(step) {
-    this.step = step - 1;
+  setContent(content) {
+    this.content = content;
     return this;
   }
-
-  redo() {
-    this.step -= 1;
+  goto(step) {
+    this.step = step - 2;
     return this;
   }
 

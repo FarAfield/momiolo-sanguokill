@@ -10,8 +10,8 @@ const _log = GameLog;
 class GameBoot extends UnInstantiated {
   // 游戏启动入口
   static async onBoot() {
-    _log.info("【游戏启动】");
-    _log.info("【资源读取中...】");
+    _log.info("System", "游戏启动");
+    _log.info("System", "资源读取中...");
     // 异步读取资源并存储
     const modules = import.meta.glob("@/lolSource/**/**/*.js");
     for (const path in modules) {
@@ -25,7 +25,7 @@ class GameBoot extends UnInstantiated {
         _library[packageName] = _library[packageName].concat(module);
       }
     }
-    _log.success("【资源读取完成】");
+    _log.success("System", "资源读取完成");
     // 加载资源
     _load.onLoad();
   }
