@@ -9,6 +9,7 @@ class GameLibrary extends UnInstantiated {
   static heroList = [];
   static cardList = [];
   static effectMap = {};
+  static effectContent = {};
   // 游戏运行配置
   static debug = false; // 事件信息debug
   static runtimeConfig = {

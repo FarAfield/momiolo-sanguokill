@@ -60,13 +60,18 @@ class GameTest extends UnInstantiated {
               current.handCards,
               current.spells
             );
-            console.log(
-              `【${current.name}】对${targets.map((i) => i.name).join(",")}使用了${card.isVirtual ? "法术" : "卡牌"}【${card.name}】`
-            );
-            console.log(disabledCard);
+            if (card.id)
+              console.log(
+                `【${current.name}】对${targets.map((i) => i.name).join(",")}使用了${card.isVirtual ? "法术" : "卡牌"}【${card.name}】`
+              );
+            const next = event.trigger(card.id);
+            next.source = current;
+            next.targets = targets;
+            next.cards = [card];
+            next.spell = card.id;
             //  event.result =  chooseToUse
             // 第二步，为true,goto(1)
-            event.finish();
+            // event.finish();
           }
 
           // function step2() {

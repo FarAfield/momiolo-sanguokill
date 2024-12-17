@@ -24,10 +24,27 @@ function importModule() {
             },
             choose: {
               player: 0,
-              target: 0,
+              target: 10,
             },
           },
-          content: () => {},
+          content: function ({ event, game, get, set, ui }) {
+            function step1() {
+              const { targets } = event;
+              event.baseDamage = 1;
+              // 是否闪避
+              event.result.isDodge = false;
+            }
+            function step2() {
+              if (!event.result.isDodge) {
+                const next = event.trigger("damage", true);
+                next.copy(event);
+              }
+            }
+            return {
+              step1,
+              step2,
+            };
+          },
         },
       },
     },
@@ -58,7 +75,6 @@ function importModule() {
               target: 1,
             },
           },
-          content: () => {},
         },
       },
     },

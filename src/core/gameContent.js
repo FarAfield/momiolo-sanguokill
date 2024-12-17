@@ -1,4 +1,5 @@
 import GameTest from "@/core/gameTest";
+
 const GameContent = {
   game: function ({ event, game, get, set, ui }) {
     function step1() {
@@ -184,6 +185,23 @@ const GameContent = {
     async function step1() {
       // player.useResult
       // useCard  /  useSpell
+    }
+    return {
+      step1,
+    };
+  },
+  damage: function ({ event, game, get, set, ui }) {
+    async function step1() {
+      const { source, targets, cards, spell, baseDamage } = event;
+      game.log(source, "对", targets, `造成${baseDamage}点伤害`);
+    }
+    return {
+      step1,
+    };
+  },
+  damageAfter: function ({ event, game, get, set, ui }) {
+    async function step1() {
+      const { source, targets, cards, spell } = event;
     }
     return {
       step1,

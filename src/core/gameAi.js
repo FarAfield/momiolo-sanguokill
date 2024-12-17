@@ -110,6 +110,11 @@ class GameAi extends UnInstantiated {
       const effectMap = _library.effectMap;
       const effect = effectMap[card.id];
       const weight = calcWeight(Object.assign({}, card, effect));
+      // 如果pow不足，则权重为0且禁用
+      if (card.cost > _status.current.pow) {
+        weight.disabled = true;
+        weight.totalWeight = 0;
+      }
       // console.log(`【${card.name}】`, weight.totalWeight, weight);
       return weight;
     });
@@ -121,8 +126,8 @@ class GameAi extends UnInstantiated {
     const bestTargets = weightResultList[bestIndex].targets;
     const disabledCard = weightResultList.filter((i) => i.disabled);
     return {
-      card: bestCard,
-      targets: bestTargets,
+      card: bestCard.disabled ? null : bestCard,
+      targets: bestCard.disabled ? [] : bestTargets,
       disabledCard,
     };
   }

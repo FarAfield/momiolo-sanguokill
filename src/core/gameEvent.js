@@ -3,6 +3,7 @@ import GameLibrary from "@/core/gameLibrary";
 import GameLog from "@/core/gameLog";
 import GameStatus from "@/core/gameStatus";
 import { createSeedRadom } from "@/core/utils";
+import { pick } from "lodash-es";
 
 const _library = GameLibrary;
 const _log = GameLog;
@@ -30,9 +31,7 @@ class GameEvent {
     // 游戏属性
     this.player = {};
     this.source = {};
-    this.target = {};
     this.targets = [];
-    this.card = {};
     this.cards = [];
     this.spell = undefined;
     this.forced = false;
@@ -136,6 +135,24 @@ class GameEvent {
     const next = new GameEvent(name, aop).toPromise();
     this.next.push(next);
     return next;
+  }
+  copy(event) {
+    Object.entries(
+      pick(event, [
+        "player",
+        "source",
+        "targets",
+        "cards",
+        "spell",
+        "forced",
+        "real",
+        "noTrigger",
+        "baseDamage",
+        "extraDamage",
+      ])
+    ).forEach(([key, value]) => {
+      this[key] = value;
+    });
   }
 }
 export default GameEvent;

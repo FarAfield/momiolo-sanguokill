@@ -71,7 +71,7 @@ function importModule() {
         name: "暗裔利刃",
         icon: "AatroxQ.png",
         description: "亚托克斯猛砸他的巨剑，依次造成1点、2点、3点伤害",
-        cost: 3,
+        cost: 4,
       },
       {
         id: "AatroxW",
@@ -100,7 +100,6 @@ function importModule() {
     effects: {
       AatroxP: {},
       AatroxQ: {
-        cost: 2,
         attrs: {
           enable: true,
           toSelf: false,
@@ -116,10 +115,27 @@ function importModule() {
           },
           choose: {
             player: 0,
-            target: 10,
+            target: 100,
           },
         },
-        content: () => {},
+        content: function ({ event, game, get, set, ui }) {
+          function step1() {
+            const { targets } = event;
+            event.baseDamage = 6;
+            // 是否闪避
+            event.result.isDodge = false;
+          }
+          function step2() {
+            if (!event.result.isDodge) {
+              const next = event.trigger("damage", true);
+              next.copy(event);
+            }
+          }
+          return {
+            step1,
+            step2,
+          };
+        },
       },
       AatroxW: {},
       AatroxE: {},

@@ -23,7 +23,7 @@ const _ui = GameUi;
 
 class GameEngine extends UnInstantiated {
   static start() {
-    _log.info("System", "游戏开始");
+    _log.success("System", "游戏开始");
     // 初始化事件
     _status.event = GameEvent.initGameEvent();
     // 触发游戏事件

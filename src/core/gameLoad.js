@@ -1,3 +1,4 @@
+import GameContent from "@/core/gameContent";
 import GameEngine from "@/core/gameEngine";
 import GameLibrary from "@/core/gameLibrary";
 import GameLog from "@/core/gameLog";
@@ -36,6 +37,14 @@ class GameLoad extends UnInstantiated {
       card.package = "talentRune";
       _library.cardList.push(card);
     }
+    // 提取effectContent并合并
+    for (const i in _library.effectMap) {
+      const effect = _library.effectMap[i];
+      if (effect && effect.content) {
+        _library.effectContent[i] = effect.content;
+      }
+    }
+    Object.assign(GameContent, _library.effectContent);
     _log.success("System", "资源加载完成");
     // 测试模式启动
     await _test.start();

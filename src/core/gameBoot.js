@@ -10,7 +10,7 @@ const _log = GameLog;
 class GameBoot extends UnInstantiated {
   // 游戏启动入口
   static async onBoot() {
-    _log.info("System", "游戏启动");
+    _log.success("System", "游戏启动");
     _log.info("System", "资源读取中...");
     // 异步读取资源并存储
     const modules = import.meta.glob("@/lolSource/**/**/*.js");
